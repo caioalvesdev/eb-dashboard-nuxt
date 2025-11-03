@@ -24,6 +24,7 @@
 
       <template #headline>
         <!-- <AuthAppLogo class="w-auto h-6 shrink-0 text-highlighted" /> -->
+        <NuxtImg src="/logo.png" height="35" alt="Logo" />
       </template>
 
       <template #default />
