@@ -1,0 +1,27 @@
+{
+  "name": "nuxt-supabase-module",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "supabase:types": "supabase gen types typescript --local > app/types/database.types.ts",
+    "supabase:types:remote": "supabase gen types typescript --project-id ieybiwepxqfryrzkycui > app/types/database.types.ts"
+  },
+  "dependencies": {
+    "@nuxt/eslint": "^1.10.0",
+    "@nuxt/image": "^1.11.0",
+    "@nuxt/scripts": "^0.13.0",
+    "@nuxt/ui": "^4.1.0",
+    "@nuxtjs/supabase": "^2.0.1",
+    "@unhead/vue": "^2.0.19",
+    "eslint": "^9.39.0",
+    "nuxt": "^4.2.0",
+    "typescript": "^5.9.3",
+    "vue": "^3.5.22",
+    "vue-router": "^4.6.3"
+  }
+}
