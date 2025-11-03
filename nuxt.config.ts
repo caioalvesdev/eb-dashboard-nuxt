@@ -22,8 +22,7 @@ export default defineNuxtConfig({
     redirectOptions: {
       login: "/auth/signin",
       callback: "/auth/callback",
-      include: undefined,
-      exclude: [],
+      include: ["auth/pending"],
       saveRedirectToCookie: false,
     },
   },
