@@ -9,6 +9,9 @@ const actions: ButtonProps[] = [
   //     variant: "subtle",
   //   },
 ];
+definePageMeta({
+  layout: "auth-default",
+});
 </script>
 <template>
   <UContainer class="flex flex-col items-center justify-center gap-4 p-4 h-dvh">
