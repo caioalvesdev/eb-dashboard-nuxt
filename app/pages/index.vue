@@ -25,6 +25,9 @@ const { data: profiles } = await useAsyncData(
         />
       </template>
     </div>
+    <div>
+      <UButton label="sair" @click="client.auth.signOut()" />
+    </div>
   </div>
 </template>
 

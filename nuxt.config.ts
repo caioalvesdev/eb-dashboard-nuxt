@@ -7,6 +7,11 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
+    private: {
+      supabaseServiceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY,
+      supabaseUrl: process.env.NUXT_PUBLIC_SUPABASE_URL,
+      supabaseKey: process.env.NUXT_PUBLIC_SUPABASE_KEY,
+    },
     public: {
       supabaseUrl: process.env.NUXT_PUBLIC_SUPABASE_URL,
       supabaseKey: process.env.NUXT_PUBLIC_SUPABASE_KEY,
@@ -15,8 +20,8 @@ export default defineNuxtConfig({
 
   supabase: {
     redirectOptions: {
-      login: "/login",
-      callback: "/confirm",
+      login: "/auth/signin",
+      callback: "/auth/callback",
       include: undefined,
       exclude: [],
       saveRedirectToCookie: false,
