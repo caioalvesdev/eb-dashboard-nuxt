@@ -113,6 +113,7 @@ const app = useAppConfig();
       class="mb-4"
     >
       <UButton
+        :loading
         form="settings"
         label="Salvar alterações"
         color="neutral"
