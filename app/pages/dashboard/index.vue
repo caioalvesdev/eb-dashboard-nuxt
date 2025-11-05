@@ -38,28 +38,19 @@ const range = shallowRef<any>({
 const period = ref<any>("daily");
 const data = ref<TabsItem[]>([
   {
-    label: "Renovação",
-    // icon: "i-lucide-user",
+    label: "Account",
+    icon: "i-lucide-user",
     content: "This is the account content.",
-    slot: "renovacao",
   },
   {
-    label: "Base de alunos info",
-    // icon: "i-lucide-lock",
+    label: "Password",
+    icon: "i-lucide-lock",
     content: "This is the password content.",
-    slot: "base-alunos-info",
   },
   {
-    label: "Gestão de Contratos MBA",
-    // icon: "i-lucide-lock",
+    label: "Password",
+    icon: "i-lucide-lock",
     content: "This is the password content.",
-    slot: "gestao-contratos-mba",
-  },
-  {
-    label: "Carteira MBA",
-    // icon: "i-lucide-lock",
-    content: "This is the password content.",
-    slot: "carteira-mba",
   },
 ]);
 </script>
@@ -97,34 +88,9 @@ const data = ref<TabsItem[]>([
     </template>
 
     <template #body>
-      <div class="mx-5 mt-5">
-        <DashboardHeading
-          icon="mdi:chart-line"
-          title="MBA"
-          description="Carregue seus arquivos Excel ou CSV para criar gráficos interativos"
-        />
-        <UTabs :items="data" class="w-full">
-          <template #renovacao>
-            <UPageGrid class="mt-4">
-              <DashboardHomeChart
-                v-for="i in 12"
-                :key="i"
-                :period="period"
-                :range="range"
-              />
-            </UPageGrid>
-          </template>
-          <template #base-alunos-info>
-            <div>Conteúdo da aba Base de Alunos</div>
-          </template>
-          <template #gestao-contratos-mba>
-            <div>Conteúdo da aba Gestão de Contratos</div>
-          </template>
-          <template #carteira-mba>
-            <div>Conteúdo da aba Carteira MBA</div>
-          </template>
-        </UTabs>
-      </div>
+      <UContainer>
+        <UTabs :items="data" class="w-full" />
+      </UContainer>
       <!-- <HomeStats :period="period" :range="range" /> -->
       <!-- <HomeChart :period="period" :range="range" /> -->
       <!-- <HomeSales :period="period" :range="range" /> -->

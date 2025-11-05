@@ -13,14 +13,11 @@ const fields: AuthFormField[] = [
     label: "Email",
     placeholder: "Insira seu email",
     required: true,
+    autocomplete: "email",
+    autofocus: true,
+    leadingIcon: "i-lucide-mail",
   },
-  //   {
-  //     name: "password",
-  //     label: "Password",
-  //     type: "password",
-  //     placeholder: "Enter your password",
-  //     required: true,
-  //   },
+
   {
     name: "remember",
     label: "Lembre-se de mim",
@@ -46,13 +43,11 @@ const providers = [
 ];
 
 const schema = z.object({
-  email: z.email("Email inválid"),
-  //   password: z
-  //     .string("Password is required")
-  //     .min(8, "Must be at least 8 characters"),
+  email: z.email("Email inválido"),
 });
 
 type Schema = z.output<typeof schema>;
+const runtimeConfig = useRuntimeConfig();
 
 const loading = ref<boolean>(false);
 async function onSubmit(event: FormSubmitEvent<Schema>) {
@@ -62,7 +57,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     const { error } = await supabase.auth.signInWithOtp({
       email: data.email,
       options: {
-        emailRedirectTo: "http://localhost:3000/confirm",
+        emailRedirectTo: runtimeConfig.public.redirectUrl,
         shouldCreateUser: false,
         data: { role: "admin" },
       },

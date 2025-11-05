@@ -1,34 +1,36 @@
 <template>
   <div class="min-h-screen xl:grid xl:grid-cols-2">
-    <UPageSection
-      title="EB - Dashboard"
-      description="Acesse sua conta e gerencie suas informações com segurança."
-      orientation="vertical"
-      :ui="{
-        root: 'border-b border-default xl:border-b-0 xl:sticky xl:inset-y-0 xl:h-screen overflow-hidden',
-        container: 'h-full items-center justify-center',
-        wrapper: 'flex flex-col',
-        headline: 'mb-6',
-        title: 'text-left text-4xl',
-        description: 'text-left max-w-lg',
-        links: 'gap-1 justify-start -ms-2.5',
-      }"
-    >
-      <template #top>
-        <AuthSkyBg />
+    <UPageCard :ui="{ root: 'rounded-none' }" variant="naked" spotlight>
+      <UPageSection
+        title="EB - Dashboard"
+        description="Acesse sua conta e gerencie suas informações com segurança."
+        orientation="vertical"
+        :ui="{
+          root: 'border-b border-default xl:border-b-0 xl:sticky xl:inset-y-0 xl:h-screen overflow-hidden',
+          container: 'h-full items-center justify-center',
+          wrapper: 'flex flex-col',
+          headline: 'mb-6',
+          title: 'text-left text-4xl',
+          description: 'text-left max-w-lg',
+          links: 'gap-1 justify-start -ms-2.5',
+        }"
+      >
+        <template #top>
+          <LazyAuthSkyBg />
 
-        <div
-          class="absolute -right-1/2 z-[-1] rounded-full bg-primary blur-[300px] size-60 sm:size-100 transform -translate-y-1/2 top-1/2"
-        />
-      </template>
+          <div
+            class="absolute -right-1/2 z-[-1] rounded-full bg-primary blur-[300px] size-60 sm:size-100 transform -translate-y-1/2 top-1/2"
+          />
+        </template>
 
-      <template #headline>
-        <!-- <AuthAppLogo class="w-auto h-6 shrink-0 text-highlighted" /> -->
-        <NuxtImg src="/logo.png" height="35" alt="Logo" />
-      </template>
+        <template #headline>
+          <!-- <AuthAppLogo class="w-auto h-6 shrink-0 text-highlighted" /> -->
+          <NuxtImg src="/logo.png" height="35" alt="Logo" />
+        </template>
 
-      <template #default />
-    </UPageSection>
+        <template #default />
+      </UPageSection>
+    </UPageCard>
 
     <section class="px-4 sm:px-6 xl:px-0 xl:-ms-30 xl:flex-1">
       <UColorModeButton class="fixed top-4 right-4 z-10" />

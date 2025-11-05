@@ -7,23 +7,29 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
-    private: {
-      supabaseServiceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY,
-      supabaseUrl: process.env.NUXT_PUBLIC_SUPABASE_URL,
-      supabaseKey: process.env.NUXT_PUBLIC_SUPABASE_KEY,
-    },
     public: {
       supabaseUrl: process.env.NUXT_PUBLIC_SUPABASE_URL,
       supabaseKey: process.env.NUXT_PUBLIC_SUPABASE_KEY,
+      redirectUrl: process.env.NUXT_PUBLIC_REDIRECT_URL,
+    },
+    private: {
+      supabaseServiceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY,
     },
   },
 
   supabase: {
     redirectOptions: {
       login: "/auth/signin",
-      callback: "/auth/callback",
-      include: ["auth/pending"],
+      callback: "/auth/confirm",
+      exclude: ["/auth/pending"],
       saveRedirectToCookie: false,
+    },
+  },
+
+  vite: {
+    server: {
+      cors: true,
+      allowedHosts: ["app.realmtech.local"],
     },
   },
 
@@ -35,6 +41,7 @@ export default defineNuxtConfig({
     "@nuxt/scripts",
     "@nuxt/ui",
     "@nuxtjs/supabase",
+    "@vueuse/nuxt",
   ],
 });
 function extendViteConfig(config: import("vite").UserConfig) {
