@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import * as z from "zod";
 import type { FormSubmitEvent } from "@nuxt/ui";
-import { useUser, type Profile } from "~/shared/composables/user/useUser";
+import { useUser, type Profile } from "~/composables/useUser";
 import imageCompression from "browser-image-compression";
 
 const fileRef = ref<HTMLInputElement>();
