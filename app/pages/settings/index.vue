@@ -114,6 +114,7 @@ const app = useAppConfig();
     >
       <UButton
         :loading
+        :disabled="loading"
         form="settings"
         label="Salvar alterações"
         color="neutral"
