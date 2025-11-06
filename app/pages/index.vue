@@ -106,23 +106,22 @@ const data = ref<TabsItem[]>([
         <UTabs :items="data" class="w-full">
           <template #renovacao>
             <UPageGrid class="mt-4">
+              <ChartPie title="Alunos ChartPie" description="R$ 3050,00" />
+              <ChartLine title="Alunos ChartLine" description="R$ 1900,00" />
+              <ChartBar title="Alunos ChartBar" description="R$ 3050,00" />
+              <ChartBar title="Alunos ChartBar" description="R$ 3050,00" />
+              <ChartLine title="Alunos ChartLine" description="R$ 1900,00" />
+              <ChartPie title="Alunos ChartPie" description="R$ 3050,00" />
+            </UPageGrid>
+          </template>
+          <template #base-alunos-info>
+            <UPageGrid class="mt-4">
               <DashboardHomeChart
                 v-for="i in 12"
                 :key="i"
                 :period="period"
                 :range="range"
               />
-            </UPageGrid>
-          </template>
-          <template #base-alunos-info>
-            <UPageGrid class="mt-4">
-              <!-- <ChartLine /> -->
-              <ChartPie title="Alunos ChartPie" description="R$ 3050,00" />
-              <ChartLine title="Alunos ChartLine" description="R$ 1900,00" />
-              <ChartBar title="Alunos ChartBar" description="R$ 3050,00" />
-              <ChartBar title="Alunos ChartBar" description="R$ 3050,00" />
-              <ChartLine title="Alunos ChartLine" description="R$ 1900,00" />
-              <ChartPie title="Alunos ChartPie" description="R$ 3050,00" />
             </UPageGrid>
           </template>
           <template #gestao-contratos-mba>
