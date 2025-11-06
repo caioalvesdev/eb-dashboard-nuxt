@@ -2,6 +2,10 @@
 import * as z from "zod";
 import type { FormError } from "@nuxt/ui";
 
+const isOpen = ref(false);
+const loading = ref(false);
+const toast = useToast();
+
 const passwordSchema = z.object({
   current: z
     .string("Campo obrigatório")
@@ -27,6 +31,27 @@ definePageMeta({
   // middleware: "auth",
   layout: "dashboard-default",
 });
+
+const handleDeleteAccount = async () => {
+  try {
+    loading.value = true;
+    // await deleteAccount();
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    toast.add({
+      title: "Conta excluída com sucesso",
+      color: "success",
+    });
+  } catch (error: any) {
+    toast.add({
+      title: "Erro ao excluir conta",
+      description: error.message,
+      color: "error",
+    });
+  } finally {
+    loading.value = false;
+    isOpen.value = false;
+  }
+};
 </script>
 
 <template>
@@ -70,7 +95,32 @@ definePageMeta({
     class="bg-linear-to-tl from-error/10 from-5% to-default"
   >
     <template #footer>
-      <UButton label="Deletar conta" color="error" />
+      <UModal
+        v-model:open="isOpen"
+        title="Confirmar Exclusão"
+        description="Tem certeza que deseja excluir sua conta? Esta ação é
+              irreversível"
+      >
+        <UButton label="Deletar conta" color="error" />
+        <template #footer>
+          <div class="flex gap-2 justify-end w-full">
+            <UButton
+              variant="outline"
+              @click="isOpen = false"
+              :disabled="loading"
+            >
+              Cancelar
+            </UButton>
+            <UButton
+              color="error"
+              @click="handleDeleteAccount"
+              :loading="loading"
+            >
+              Excluir Permanentemente
+            </UButton>
+          </div>
+        </template>
+      </UModal>
     </template>
   </UPageCard>
 </template>

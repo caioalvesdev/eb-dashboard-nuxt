@@ -42,6 +42,9 @@ export default defineNuxtConfig({
     "@nuxt/ui",
     "@nuxtjs/supabase",
     "@vueuse/nuxt",
+    "nuxt-charts",
+    "nuxt-echarts",
+    "motion-v/nuxt",
   ],
 });
 function extendViteConfig(config: import("vite").UserConfig) {

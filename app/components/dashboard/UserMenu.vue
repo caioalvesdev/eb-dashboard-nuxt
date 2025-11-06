@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { DropdownMenuItem } from "@nuxt/ui";
+import { useStorage } from "@vueuse/core";
 
 defineProps<{
   collapsed?: boolean;
@@ -7,6 +8,15 @@ defineProps<{
 
 const colorMode = useColorMode();
 const appConfig = useAppConfig();
+const preferences = useStorage("ui-preferences", {
+  theme: {
+    primary: appConfig.ui.colors.primary,
+    neutral: appConfig.ui.colors.neutral,
+  },
+  appearance: {
+    colorMode: colorMode.value,
+  },
+});
 
 const colors = [
   "red",
@@ -80,6 +90,7 @@ const items = computed<DropdownMenuItem[][]>(() => [
               e.preventDefault();
 
               appConfig.ui.colors.primary = color;
+              preferences.value.theme.primary = color;
             },
           })),
         },
@@ -104,6 +115,7 @@ const items = computed<DropdownMenuItem[][]>(() => [
               e.preventDefault();
 
               appConfig.ui.colors.neutral = color;
+              preferences.value.theme.neutral = color;
             },
           })),
         },
@@ -122,6 +134,7 @@ const items = computed<DropdownMenuItem[][]>(() => [
             e.preventDefault();
 
             colorMode.preference = "light";
+            preferences.value.appearance.colorMode = "light";
           },
         },
         {
@@ -132,6 +145,7 @@ const items = computed<DropdownMenuItem[][]>(() => [
           onUpdateChecked(checked: boolean) {
             if (checked) {
               colorMode.preference = "dark";
+              preferences.value.appearance.colorMode = "dark";
             }
           },
           onSelect(e: Event) {

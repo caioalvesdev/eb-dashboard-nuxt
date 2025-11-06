@@ -23,10 +23,15 @@
     "browser-image-compression": "^2.0.2",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
+    "echarts": "^6.0.0",
     "eslint": "^9.39.0",
+    "motion-v": "^1.7.4",
     "nuxt": "^4.2.0",
+    "nuxt-charts": "^1.0.2",
+    "nuxt-echarts": "^1.0.1",
     "typescript": "^5.9.3",
     "vue": "^3.5.22",
+    "vue-echarts": "^8.0.1",
     "vue-router": "^4.6.3"
   },
   "devDependencies": {

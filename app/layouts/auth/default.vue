@@ -1,9 +1,7 @@
 <template>
-  <div class="min-h-screen xl:grid xl:grid-cols-2">
+  <div class="xl:grid xl:grid-cols-2">
     <UPageCard :ui="{ root: 'rounded-none' }" variant="naked" spotlight>
       <UPageSection
-        title="EB - Dashboard"
-        description="Acesse sua conta e gerencie suas informações com segurança."
         orientation="vertical"
         :ui="{
           root: 'border-b border-default xl:border-b-0 xl:sticky xl:inset-y-0 xl:h-screen overflow-hidden',
@@ -15,6 +13,32 @@
           links: 'gap-1 justify-start -ms-2.5',
         }"
       >
+        <template #title>
+          <Motion
+            as-child
+            :initial="{ opacity: 0, transform: 'translateX(-10px)' }"
+            :while-in-view="{ opacity: 1, transform: 'translateX(0)' }"
+            :transition="{ delay: 0.2 + 0.4 * 1 }"
+            :in-view-options="{ once: true }"
+          >
+            <div class="opacity-0">Realm Tech Solutions</div>
+          </Motion>
+        </template>
+
+        <template #description>
+          <Motion
+            as-child
+            :initial="{ opacity: 0, transform: 'translateX(-10px)' }"
+            :while-in-view="{ opacity: 1, transform: 'translateX(0)' }"
+            :transition="{ delay: 0.2 + 0.4 * 2 }"
+            :in-view-options="{ once: true }"
+          >
+            <div class="opacity-0">
+              A plataforma definitiva para gerenciar seus projetos e equipes com
+              eficiência e facilidade.
+            </div>
+          </Motion>
+        </template>
         <template #top>
           <LazyAuthSkyBg />
 
@@ -34,7 +58,6 @@
 
     <section class="px-4 sm:px-6 xl:px-0 xl:-ms-30 xl:flex-1">
       <UColorModeButton class="fixed top-4 right-4 z-10" />
-
       <slot />
     </section>
   </div>
