@@ -1,3 +1,5 @@
+import { Colors } from "chart.js";
+
 export default defineAppConfig({
   theme: {
     radius: 0.25,

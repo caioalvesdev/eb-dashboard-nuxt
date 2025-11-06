@@ -1,20 +1,10 @@
 <script setup lang="ts">
 import { sub } from "date-fns";
 import type { DropdownMenuItem, TabsItem } from "@nuxt/ui";
-// import { useUser } from "~/shared/composables/user/useUser";
 
 definePageMeta({
-  // middleware: "auth",
   layout: "dashboard-default",
 });
-// import type { Period, Range } from "~~/types";
-
-// const { data: user } = await useAsyncData("profile", async () => {
-//   const { data } = await client.from("profiles").select("*").single();
-//   return data;
-// });
-
-// const { isNotificationsSlideoverOpen } = useDashboard();
 
 const items = [
   [
@@ -35,7 +25,7 @@ const range = shallowRef<any>({
   start: sub(new Date(), { days: 14 }),
   end: new Date(),
 });
-const period = ref<any>("daily");
+const period = ref<any>("Diário");
 const data = ref<TabsItem[]>([
   {
     label: "Renovação",
@@ -87,13 +77,25 @@ const data = ref<TabsItem[]>([
         </template>
       </UDashboardNavbar>
 
-      <!-- <UDashboardToolbar>
+      <UDashboardToolbar :ui="{ right: 'gap-3' }">
         <template #left>
-          <HomeDateRangePicker v-model="range" class="-ms-1" />
+          <DashboardHomeDateRangePicker v-model="range" class="-ms-1" />
 
-          <HomePeriodSelect v-model="period" :range="range" />
+          <DashboardHomePeriodSelect v-model="period" :range="range" />
         </template>
-      </UDashboardToolbar> -->
+        <template #right>
+          <UButton
+            label="Baixar template"
+            variant="outline"
+            icon="i-lucide-download-cloud"
+          />
+          <UButton
+            label="Upload"
+            variant="solid"
+            icon="i-lucide-upload-cloud"
+          />
+        </template>
+      </UDashboardToolbar>
     </template>
 
     <template #body>

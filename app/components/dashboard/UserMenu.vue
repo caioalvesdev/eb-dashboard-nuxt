@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { DropdownMenuItem } from "@nuxt/ui";
 import { useStorage } from "@vueuse/core";
+import { isStringLiteralOrJsxExpression } from "typescript";
 
 defineProps<{
   collapsed?: boolean;
@@ -12,6 +13,8 @@ const preferences = useStorage("ui-preferences", {
   theme: {
     primary: appConfig.ui.colors.primary,
     neutral: appConfig.ui.colors.neutral,
+    radius: appConfig.theme.radius,
+    blackAsPrimary: appConfig.theme.blackAsPrimary,
   },
   appearance: {
     colorMode: colorMode.value,
@@ -19,6 +22,7 @@ const preferences = useStorage("ui-preferences", {
 });
 
 const colors = [
+  "black",
   "red",
   "orange",
   "amber",
@@ -37,6 +41,7 @@ const colors = [
   "pink",
   "rose",
 ];
+const radius = [0, 0.125, 0.25, 0.375, 0.5];
 const neutrals = ["slate", "gray", "zinc", "neutral", "stone"];
 
 const { user } = useUser();
@@ -75,7 +80,9 @@ const items = computed<DropdownMenuItem[][]>(() => [
         {
           label: "Primária",
           slot: "chip",
-          chip: appConfig.ui.colors.primary,
+          chip: appConfig.theme.blackAsPrimary
+            ? "black"
+            : appConfig.ui.colors.primary,
           content: {
             align: "center",
             collisionPadding: 16,
@@ -84,13 +91,23 @@ const items = computed<DropdownMenuItem[][]>(() => [
             label: color,
             chip: color,
             slot: "chip",
-            checked: appConfig.ui.colors.primary === color,
+            checked:
+              (appConfig.theme.blackAsPrimary && color === "black") ||
+              (appConfig.ui.colors.primary === color &&
+                appConfig.theme.blackAsPrimary === false),
             type: "checkbox",
             onSelect: (e) => {
               e.preventDefault();
 
-              appConfig.ui.colors.primary = color;
-              preferences.value.theme.primary = color;
+              if (color === "black") {
+                appConfig.theme.blackAsPrimary = true;
+                preferences.value.theme.blackAsPrimary = true;
+              } else {
+                appConfig.theme.blackAsPrimary = false;
+                preferences.value.theme.blackAsPrimary = false;
+                appConfig.ui.colors.primary = color;
+                preferences.value.theme.primary = color;
+              }
             },
           })),
         },
@@ -116,6 +133,30 @@ const items = computed<DropdownMenuItem[][]>(() => [
 
               appConfig.ui.colors.neutral = color;
               preferences.value.theme.neutral = color;
+            },
+          })),
+        },
+        {
+          label: "Radius",
+          slot: "chip",
+          chip: radius.includes(appConfig.theme.radius)
+            ? appConfig.theme.radius
+            : 0.25,
+          content: {
+            align: "end",
+            collisionPadding: 16,
+          },
+          children: radius.map((r) => ({
+            label: String(r),
+            chip: r === 0 ? "old-neutral" : r,
+            slot: "chip",
+            type: "checkbox",
+            checked: appConfig.theme.radius === r,
+            onSelect: (e) => {
+              e.preventDefault();
+              console.log({ r });
+              appConfig.theme.radius = r;
+              preferences.value.theme.radius = r;
             },
           })),
         },

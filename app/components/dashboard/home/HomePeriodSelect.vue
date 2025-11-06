@@ -12,14 +12,14 @@ const days = computed(() => eachDayOfInterval(props.range));
 
 const periods = computed<Period[]>(() => {
   if (days.value.length <= 8) {
-    return ["daily"];
+    return ["Diário"];
   }
 
   if (days.value.length <= 31) {
-    return ["daily", "weekly"];
+    return ["Diário", "Semanal"];
   }
 
-  return ["weekly", "monthly"];
+  return ["Semanal", "Mensal"];
 });
 
 // Ensure the model value is always a valid period

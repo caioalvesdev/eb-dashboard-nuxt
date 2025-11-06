@@ -40,7 +40,7 @@ watch(
         weekly: eachWeekOfInterval,
         monthly: eachMonthOfInterval,
       } as Record<Period, typeof eachDayOfInterval>
-    )[props.period](props.range);
+    )[props.period === "Diário" ? "daily" : "weekly"](props.range);
 
     const min = 1000;
     const max = 10000;

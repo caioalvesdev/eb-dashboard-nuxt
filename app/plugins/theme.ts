@@ -16,16 +16,25 @@ export default defineNuxtPlugin({
       }
 
       function updateRadius() {
-        const radius = localStorage.getItem("nuxt-ui-radius");
-        if (radius) {
+        const preferences = JSON.parse(
+          localStorage.getItem("ui-preferences") || "{}"
+        );
+        const radius = preferences.theme.radius;
+        console.log({ radius });
+
+        if (radius !== undefined && radius !== null) {
           appConfig.theme.radius = Number.parseFloat(radius);
         }
       }
 
       function updateBlackAsPrimary() {
-        const blackAsPrimary = localStorage.getItem("nuxt-ui-black-as-primary");
+        const preferences = JSON.parse(
+          localStorage.getItem("ui-preferences") || "{}"
+        );
+        const blackAsPrimary = preferences.theme.blackAsPrimary;
+        console.log({ blackAsPrimary });
         if (blackAsPrimary) {
-          appConfig.theme.blackAsPrimary = blackAsPrimary === "true";
+          appConfig.theme.blackAsPrimary = blackAsPrimary;
         }
       }
 
@@ -66,8 +75,8 @@ export default defineNuxtPlugin({
           },
           {
             innerHTML: `
-            if (localStorage.getItem('nuxt-ui-radius')) {
-              document.querySelector('style#nuxt-ui-radius').innerHTML = ':root { --ui-radius: ' + localStorage.getItem('nuxt-ui-radius') + 'rem; }';
+            if (localStorage.getItem('ui-preferences')) {
+              document.querySelector('style#nuxt-ui-radius').innerHTML = ':root { --ui-radius: ' + JSON.parse(localStorage.getItem('ui-preferences')).theme.radius + 'rem; }';
             }
           `.replace(/\s+/g, " "),
             type: "text/javascript",
@@ -75,7 +84,7 @@ export default defineNuxtPlugin({
           },
           {
             innerHTML: `
-            if (localStorage.getItem('nuxt-ui-black-as-primary') === 'true') {
+            if (localStorage.getItem('ui-preferences') && JSON.parse(localStorage.getItem('ui-preferences')).theme.blackAsPrimary) {
               document.querySelector('style#nuxt-ui-black-as-primary').innerHTML = ':root { --ui-primary: black; } .dark { --ui-primary: white; }';
             } else {
               document.querySelector('style#nuxt-ui-black-as-primary').innerHTML = '';

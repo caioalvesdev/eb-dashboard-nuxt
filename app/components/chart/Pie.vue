@@ -27,6 +27,7 @@ const pieData = computed<ChartData<"pie">>(() => ({
         duration: 1500,
       },
       backgroundColor: [
+        // cssColor(`--ui-primary`),
         cssColor(`--color-${appConfig.ui.colors.primary}-200`),
         cssColor(`--color-${appConfig.ui.colors.primary}-400`),
         cssColor(`--color-${appConfig.ui.colors.primary}-600`),

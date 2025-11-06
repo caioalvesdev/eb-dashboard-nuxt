@@ -26,8 +26,8 @@ definePageMeta({
         size="xl"
         variant="naked"
         icon="i-lucide-mail-open"
-        title="Sucesso"
-        description="Você está quase lá! Verifique seu email para o link de confirmação."
+        title="Confira seu e-mail"
+        description="Enviamos um link mágico para você acessar sua conta. Clique no link que está no seu e-mail para entrar. Se não encontrar, verifique na caixa de spam."
         :actions
       />
     </Motion>

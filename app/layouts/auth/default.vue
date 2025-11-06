@@ -21,7 +21,7 @@
             :transition="{ delay: 0.2 + 0.4 * 1 }"
             :in-view-options="{ once: true }"
           >
-            <div class="opacity-0">Realm Tech Solutions</div>
+            <div>Realm Tech Solutions</div>
           </Motion>
         </template>
 
@@ -33,7 +33,7 @@
             :transition="{ delay: 0.2 + 0.4 * 2 }"
             :in-view-options="{ once: true }"
           >
-            <div class="opacity-0">
+            <div>
               A plataforma definitiva para gerenciar seus projetos e equipes com
               eficiência e facilidade.
             </div>
