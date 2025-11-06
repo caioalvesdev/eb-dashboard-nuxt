@@ -5,13 +5,12 @@ export default defineNuxtPlugin({
 
     if (import.meta.client) {
       function updateColor(type: "primary" | "neutral") {
-        const color = JSON.parse(
+        const preferences = JSON.parse(
           localStorage.getItem("ui-preferences") || "{}"
         );
-        const theme = color.theme[type];
-        console.log({ color });
-        if (theme) {
-          appConfig.ui.colors[type] = theme;
+        const color = preferences?.theme?.[type];
+        if (color) {
+          appConfig.ui.colors[type] = color;
         }
       }
 
@@ -20,7 +19,6 @@ export default defineNuxtPlugin({
           localStorage.getItem("ui-preferences") || "{}"
         );
         const radius = preferences.theme.radius;
-        console.log({ radius });
 
         if (radius !== undefined && radius !== null) {
           appConfig.theme.radius = Number.parseFloat(radius);
