@@ -115,7 +115,15 @@ const data = ref<TabsItem[]>([
             </UPageGrid>
           </template>
           <template #base-alunos-info>
-            <div>Conteúdo da aba Base de Alunos</div>
+            <UPageGrid class="mt-4">
+              <!-- <ChartLine /> -->
+              <ChartPie title="Alunos ChartPie" description="R$ 3050,00" />
+              <ChartLine title="Alunos ChartLine" description="R$ 1900,00" />
+              <ChartBar title="Alunos ChartBar" description="R$ 3050,00" />
+              <ChartBar title="Alunos ChartBar" description="R$ 3050,00" />
+              <ChartLine title="Alunos ChartLine" description="R$ 1900,00" />
+              <ChartPie title="Alunos ChartPie" description="R$ 3050,00" />
+            </UPageGrid>
           </template>
           <template #gestao-contratos-mba>
             <div>Conteúdo da aba Gestão de Contratos</div>

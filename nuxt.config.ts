@@ -17,6 +17,11 @@ export default defineNuxtConfig({
     },
   },
 
+  echarts: {
+    charts: ["BarChart"],
+    components: ["DatasetComponent", "GridComponent", "TooltipComponent"],
+  },
+
   supabase: {
     redirectOptions: {
       login: "/auth/signin",

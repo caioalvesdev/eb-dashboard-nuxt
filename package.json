@@ -17,11 +17,14 @@
     "@nuxt/scripts": "^0.13.0",
     "@nuxt/ui": "^4.1.0",
     "@nuxtjs/supabase": "^2.0.1",
+    "@types/culori": "^4.0.1",
     "@unhead/vue": "^2.0.19",
     "@unovis/vue": "^1.6.1",
     "@vueuse/nuxt": "^14.0.0",
     "browser-image-compression": "^2.0.2",
+    "chart.js": "^4.5.1",
     "clsx": "^2.1.1",
+    "culori": "^4.0.2",
     "date-fns": "^4.1.0",
     "echarts": "^6.0.0",
     "eslint": "^9.39.0",
@@ -32,7 +35,8 @@
     "typescript": "^5.9.3",
     "vue": "^3.5.22",
     "vue-echarts": "^8.0.1",
-    "vue-router": "^4.6.3"
+    "vue-router": "^4.6.3",
+    "vue-chartjs": "^5.3.2"
   },
   "devDependencies": {
     "@iconify-json/lucide": "^1.2.72"

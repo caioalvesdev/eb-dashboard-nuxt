@@ -22,16 +22,6 @@ useSeoMeta({
   ogDescription: description,
 });
 
-const preferences = useStorage("preferences", {
-  theme: {
-    primaryColor: appConfig.ui.colors.primary,
-    neutralColor: appConfig.ui.colors.neutral,
-  },
-  appearance: {
-    colorMode: colorMode.value,
-  },
-});
-
 useFaviconFromTheme();
 
 // onMounted(() => {
