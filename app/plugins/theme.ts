@@ -18,7 +18,7 @@ export default defineNuxtPlugin({
         const preferences = JSON.parse(
           localStorage.getItem("ui-preferences") || "{}"
         );
-        const radius = preferences.theme.radius;
+        const radius = preferences?.theme?.radius;
 
         if (radius !== undefined && radius !== null) {
           appConfig.theme.radius = Number.parseFloat(radius);
@@ -29,8 +29,7 @@ export default defineNuxtPlugin({
         const preferences = JSON.parse(
           localStorage.getItem("ui-preferences") || "{}"
         );
-        const blackAsPrimary = preferences.theme.blackAsPrimary;
-        console.log({ blackAsPrimary });
+        const blackAsPrimary = preferences?.theme?.blackAsPrimary;
         if (blackAsPrimary) {
           appConfig.theme.blackAsPrimary = blackAsPrimary;
         }
@@ -50,7 +49,7 @@ export default defineNuxtPlugin({
             let html = document.querySelector('style#nuxt-ui-colors').innerHTML;
 
             if (localStorage.getItem('ui-preferences')) {
-              const primaryColor = localStorage.getItem('ui-preferences') ? JSON.parse(localStorage.getItem('ui-preferences')).theme.primary : null;
+              const primaryColor = localStorage.getItem('ui-preferences') ? JSON.parse(localStorage.getItem('ui-preferences'))?.theme?.primary : null;
               if (primaryColor !== 'black') {
                 html = html.replace(
                   /(--ui-color-primary-\\d{2,3}:\\s*var\\(--color-)${appConfig.ui.colors.primary}(-\\d{2,3}.*?\\))/g,
@@ -59,7 +58,7 @@ export default defineNuxtPlugin({
               }
             }
             if (localStorage.getItem('ui-preferences')) {
-              let neutralColor = localStorage.getItem('ui-preferences') ? JSON.parse(localStorage.getItem('ui-preferences')).theme.neutral : null;
+              let neutralColor = localStorage.getItem('ui-preferences') ? JSON.parse(localStorage.getItem('ui-preferences'))?.theme?.neutral : null;
               html = html.replace(
                 /(--ui-color-neutral-\\d{2,3}:\\s*var\\(--color-)${appConfig.ui.colors.neutral}(-\\d{2,3}.*?\\))/g,
                 \`$1\${neutralColor === 'neutral' ? 'old-neutral' : neutralColor}$2\`
@@ -74,7 +73,7 @@ export default defineNuxtPlugin({
           {
             innerHTML: `
             if (localStorage.getItem('ui-preferences')) {
-              document.querySelector('style#nuxt-ui-radius').innerHTML = ':root { --ui-radius: ' + JSON.parse(localStorage.getItem('ui-preferences')).theme.radius + 'rem; }';
+              document.querySelector('style#nuxt-ui-radius').innerHTML = ':root { --ui-radius: ' + JSON.parse(localStorage.getItem('ui-preferences'))?.theme?.radius + 'rem; }';
             }
           `.replace(/\s+/g, " "),
             type: "text/javascript",
@@ -82,7 +81,7 @@ export default defineNuxtPlugin({
           },
           {
             innerHTML: `
-            if (localStorage.getItem('ui-preferences') && JSON.parse(localStorage.getItem('ui-preferences')).theme.blackAsPrimary) {
+            if (localStorage.getItem('ui-preferences') && JSON.parse(localStorage.getItem('ui-preferences'))?.theme?.blackAsPrimary) {
               document.querySelector('style#nuxt-ui-black-as-primary').innerHTML = ':root { --ui-primary: black; } .dark { --ui-primary: white; }';
             } else {
               document.querySelector('style#nuxt-ui-black-as-primary').innerHTML = '';
