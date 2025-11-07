@@ -117,7 +117,32 @@ const state = reactive<Partial<schema>>({
   file: undefined,
 });
 
-const value = ref(0);
+const downloadTemplateLoading = ref<boolean>(false);
+
+async function handleDownloadTemplate() {
+  try {
+    downloadTemplateLoading.value = true;
+    // Simula o download do template
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+    toast.add({
+      title: "Sucesso",
+      description: "Template baixado com sucesso!",
+      icon: "i-lucide-check",
+    });
+  } catch (error) {
+    toast.add({
+      title: "Erro",
+      description: "Ocorreu um erro ao baixar o template.",
+      icon: "i-lucide-x-circle",
+      color: "error",
+    });
+  } finally {
+    downloadTemplateLoading.value = false;
+  }
+}
+
+const value = ref<number>(0);
+
 async function onSubmit(event: FormSubmitEvent<schema>) {
   try {
     isLoadingUpload.value = true;
@@ -187,6 +212,9 @@ async function onSubmit(event: FormSubmitEvent<schema>) {
             label="Baixar template"
             variant="outline"
             icon="i-lucide-download-cloud"
+            :loading="downloadTemplateLoading"
+            :disable="downloadTemplateLoading"
+            @click="handleDownloadTemplate"
           />
           <UModal
             v-model:open="isOpenUploadModal"
