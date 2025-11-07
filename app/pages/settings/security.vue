@@ -37,10 +37,7 @@ const handleDeleteAccount = async () => {
     loading.value = true;
     // await deleteAccount();
     await new Promise((resolve) => setTimeout(resolve, 2000));
-    toast.add({
-      title: "Conta excluída com sucesso",
-      color: "success",
-    });
+    toast.add({ title: "Conta excluída com sucesso" });
   } catch (error: any) {
     toast.add({
       title: "Erro ao excluir conta",
