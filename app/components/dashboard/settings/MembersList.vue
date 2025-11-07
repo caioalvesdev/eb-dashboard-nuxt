@@ -6,6 +6,9 @@ import type { TableColumn } from "@nuxt/ui";
 const UBadge = resolveComponent("UBadge");
 const UAvatar = resolveComponent("UAvatar");
 const UButton = resolveComponent("UButton");
+const UPopover = resolveComponent("UPopover");
+const UPageCard = resolveComponent("UPageCard");
+const NuxtImg = resolveComponent("NuxtImg");
 const toast = useToast();
 
 type Member = {
@@ -42,10 +45,48 @@ const columns: TableColumn<Member>[] = [
     header: "Name",
     cell: ({ row }) => {
       return h("div", { class: "flex items-center gap-3" }, [
-        h(UAvatar, {
-          ...row.original,
-          size: "lg",
-        }),
+        h(
+          UPopover,
+          {
+            arrow: true,
+            mode: "hover",
+            openDelay: 250,
+            closeDelay: 100,
+          },
+          {
+            default: () =>
+              h(UAvatar, {
+                ...row.original,
+                size: "lg",
+              }),
+            content: () =>
+              h(
+                UPageCard,
+                {
+                  spotlight: true,
+                },
+                {
+                  default: () =>
+                    row.original.avatar
+                      ? h(NuxtImg, {
+                          class: "rounded-lg",
+                          width: "300",
+                          height: "300",
+                          src: row.original.avatar,
+                          alt: row.original.username || row.original.full_name,
+                        })
+                      : h(
+                          "div",
+                          {
+                            class:
+                              "w-[300px] h-[300px] flex items-center justify-center bg-gray-100 dark:bg-gray-800 rounded-lg",
+                          },
+                          "Sem avatar"
+                        ),
+                }
+              ),
+          }
+        ),
         h("div", undefined, [
           h(
             "p",
