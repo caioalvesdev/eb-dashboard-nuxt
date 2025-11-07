@@ -28,12 +28,15 @@ const allMembers = computed(() => {
       id: user.id,
       email: user.email,
       name: profile?.name,
-      username: profile?.full_name,
+      username: profile?.username,
+      full_name: profile?.full_name,
       avatar: profile?.avatar_url,
       bio: profile?.bio,
       role: user.role || "user",
       created_at: user.created_at,
       last_sign_in_at: user.last_sign_in_at,
+      invited_at: user.invited_at,
+      email_confirmed_at: user.email_confirmed_at,
       src: profile?.avatar_url,
       alt: profile?.name,
       profile,
@@ -110,7 +113,7 @@ definePageMeta({
 </script>
 
 <template>
-  <section class="lg:max-w-4xl mx-auto w-full">
+  <section class="mx-auto w-full">
     <UPageCard
       title="Membros"
       description="Convide novos membros por endereço de e-mail."

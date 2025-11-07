@@ -53,7 +53,7 @@ const handleDeleteAccount = async () => {
 
 <template>
   <UPageCard
-    class="lg:max-w-3xl mx-auto w-full"
+    class="lg:max-w-2xl mx-auto w-full"
     title="Senha"
     description="Confirme sua senha atual antes de definir uma nova."
     variant="subtle"
@@ -90,7 +90,7 @@ const handleDeleteAccount = async () => {
   <UPageCard
     title="Conta"
     description="Não quer mais usar nosso serviço? Você pode excluir sua conta aqui. Esta ação é irreversível. Todas as informações relacionadas a esta conta serão excluídas permanentemente."
-    class="bg-linear-to-tl from-error/10 from-5% to-default lg:max-w-3xl mx-auto w-full"
+    class="bg-linear-to-tl from-error/10 from-5% to-default lg:max-w-2xl mx-auto w-full"
   >
     <template #footer>
       <UModal

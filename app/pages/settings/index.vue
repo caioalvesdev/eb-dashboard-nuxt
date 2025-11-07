@@ -100,7 +100,7 @@ const app = useAppConfig();
 
 <template>
   <UForm
-    class="lg:max-w-3xl mx-auto w-full"
+    class="lg:max-w-2xl mx-auto w-full"
     id="settings"
     :schema="profileSchema"
     :state="profile"
@@ -108,7 +108,7 @@ const app = useAppConfig();
   >
     <UPageCard
       title="Perfil"
-      description="Estas informações serão exibidas publicamente."
+      description="Atualize suas informações de perfil e foto."
       variant="naked"
       orientation="horizontal"
       class="mb-4"

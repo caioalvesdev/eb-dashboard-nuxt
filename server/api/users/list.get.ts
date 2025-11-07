@@ -19,7 +19,7 @@ export default defineEventHandler(async (event) => {
         message: error.message,
       });
     }
-    console.log({ data });
+    console.log({ data: data.users[0] });
 
     // Busca os profiles de todos os usuários
     const userIds = data.users.map((user) => user.id);

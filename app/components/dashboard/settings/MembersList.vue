@@ -5,6 +5,8 @@ import type { TableColumn } from "@nuxt/ui";
 
 const UBadge = resolveComponent("UBadge");
 const UAvatar = resolveComponent("UAvatar");
+const UButton = resolveComponent("UButton");
+const toast = useToast();
 
 type Member = {
   created_at: string;
@@ -13,6 +15,9 @@ type Member = {
   username: string;
   avatar: string;
   last_sign_in_at: string;
+  full_name: string;
+  email_confirmed_at: string;
+  invited_at: string;
 };
 
 defineProps<{
@@ -36,7 +41,6 @@ const columns: TableColumn<Member>[] = [
     accessorKey: "name",
     header: "Name",
     cell: ({ row }) => {
-      console.log({ row });
       return h("div", { class: "flex items-center gap-3" }, [
         h(UAvatar, {
           ...row.original,
@@ -48,7 +52,7 @@ const columns: TableColumn<Member>[] = [
             { class: "font-medium text-highlighted" },
             row.original.username
           ),
-          h("p", { class: "" }, `@${row.original.username}`),
+          h("p", { class: "" }, `@${row.original.full_name}`),
         ]),
       ]);
     },
@@ -56,6 +60,26 @@ const columns: TableColumn<Member>[] = [
   {
     accessorKey: "email",
     header: "Email",
+    cell: ({ row }) => {
+      return h(
+        UButton,
+        {
+          variant: "link",
+          size: "sm",
+          class: "px-0",
+          color: "neutral",
+          trailingIcon: "i-lucide-copy",
+          onClick: () => {
+            navigator.clipboard.writeText(row.getValue("email"));
+            toast.add({
+              title: "Email copiado para a área de transferência",
+              icon: "i-lucide-check-circle",
+            });
+          },
+        },
+        () => row.getValue("email")
+      );
+    },
   },
   {
     accessorKey: "role",
@@ -98,6 +122,35 @@ const columns: TableColumn<Member>[] = [
       });
     },
   },
+  {
+    accessorKey: "invited_at",
+    header: "Email convidado",
+    cell: ({ row }) => {
+      return new Date(row.getValue("invited_at")).toLocaleString("pt-BR", {
+        day: "numeric",
+        month: "short",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+      });
+    },
+  },
+  {
+    accessorKey: "email_confirmed_at",
+    header: "Email confirmado",
+    cell: ({ row }) => {
+      return new Date(row.getValue("email_confirmed_at")).toLocaleString(
+        "pt-BR",
+        {
+          day: "numeric",
+          month: "short",
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false,
+        }
+      );
+    },
+  },
 ];
 </script>
 
@@ -124,23 +177,6 @@ const columns: TableColumn<Member>[] = [
       </div>
 
       <div class="flex items-center gap-3">
-        <div class="flex gap-3">
-          <!-- <UBadge variant="subtle" class="capitalize">{{ member.role }}</UBadge>
-          <UBadge variant="subtle" class="capitalize">{{
-            member.last_sign_in_at
-          }}</UBadge>
-          <UBadge variant="subtle" class="capitalize">{{
-            member.created_at
-          }}</UBadge> -->
-          <!-- <UBadge variant="subtle" class="capitalize">{{ member }}</UBadge> -->
-          <!-- <USelect
-            :model-value="member.role"
-            :items="['member', 'owner']"
-            color="neutral"
-            :ui="{ value: 'capitalize', item: 'capitalize' }"
-          /> -->
-        </div>
-
         <UDropdownMenu :items="items" :content="{ align: 'end' }">
           <UButton
             icon="i-lucide-ellipsis-vertical"
