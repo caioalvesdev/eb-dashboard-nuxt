@@ -222,6 +222,8 @@ async function onSubmit(event: FormSubmitEvent<schema>) {
               >
                 <UFormField name="file">
                   <UFileUpload
+                    :disabled="isLoadingUpload"
+                    :file-delete="!isLoadingUpload"
                     v-model="state.file"
                     label="Selecione ou arraste um arquivo"
                     description="CSV, XLS, XLSX (max. 10MB)"
