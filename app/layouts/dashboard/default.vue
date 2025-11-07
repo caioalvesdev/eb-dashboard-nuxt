@@ -34,14 +34,14 @@ const links = [
     //   },
     // },
     {
-      label: "Settings",
+      label: "Configurações",
       to: "/settings",
       icon: "i-lucide-settings",
       defaultOpen: true,
       type: "trigger",
       children: [
         {
-          label: "General",
+          label: "Geral",
           to: "/settings",
           exact: true,
           onSelect: () => {
@@ -49,7 +49,7 @@ const links = [
           },
         },
         {
-          label: "Members",
+          label: "Membros",
           to: "/settings/members",
           onSelect: () => {
             open.value = false;
@@ -63,7 +63,7 @@ const links = [
         //   },
         // },
         {
-          label: "Security",
+          label: "Segurança",
           to: "/settings/security",
           onSelect: () => {
             open.value = false;
