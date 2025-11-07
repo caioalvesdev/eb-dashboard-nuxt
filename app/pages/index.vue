@@ -228,7 +228,7 @@ async function onSubmit(event: FormSubmitEvent<schema>) {
                     label="Selecione ou arraste um arquivo"
                     description="CSV, XLS, XLSX (max. 10MB)"
                     accept=".csv,.xls,.xlsx"
-                    class="min-h-48"
+                    class="min-h-48 select-none"
                   />
                 </UFormField>
 
