@@ -117,10 +117,19 @@ const state = reactive<Partial<schema>>({
   file: undefined,
 });
 
+const value = ref(0);
 async function onSubmit(event: FormSubmitEvent<schema>) {
   try {
     isLoadingUpload.value = true;
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    value.value = 0;
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    value.value = 1;
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    value.value = 2;
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    value.value = 3;
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    value.value = 4;
     console.log(event.data);
     toast.add({
       title: "Sucesso",
@@ -129,6 +138,7 @@ async function onSubmit(event: FormSubmitEvent<schema>) {
     });
     await new Promise((resolve) => setTimeout(resolve, 500));
     isOpenUploadModal.value = false;
+    state.file = undefined;
   } catch (error) {
     console.error(error);
     toast.add({
@@ -191,6 +201,18 @@ async function onSubmit(event: FormSubmitEvent<schema>) {
             />
 
             <template #body>
+              <UProgress
+                class="mb-2"
+                v-if="isLoadingUpload"
+                v-model="value"
+                :max="[
+                  'Aguardando...',
+                  'Clonando...',
+                  'Migrando...',
+                  'Implantando...',
+                  'Concluído!',
+                ]"
+              />
               <UForm
                 :disabled="isLoadingUpload"
                 :schema="schema"
