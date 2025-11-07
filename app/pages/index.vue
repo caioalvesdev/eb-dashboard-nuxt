@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { sub } from "date-fns";
 import type { DropdownMenuItem, TabsItem } from "@nuxt/ui";
+import * as z from "zod";
+import type { FormSubmitEvent } from "@nuxt/ui";
 
 definePageMeta({
   layout: "dashboard-default",
@@ -21,6 +23,10 @@ const items = [
   ],
 ] satisfies DropdownMenuItem[][];
 
+const toast = useToast();
+
+const isOpenUploadModal = ref<boolean>(false);
+const isLoadingUpload = ref<boolean>(false);
 const range = shallowRef<any>({
   start: sub(new Date(), { days: 14 }),
   end: new Date(),
@@ -52,6 +58,89 @@ const data = ref<TabsItem[]>([
     slot: "carteira-mba",
   },
 ]);
+
+const MAX_FILE_SIZE = 10 * 1024 * 1024;
+
+const formatBytes = (bytes: number, decimals = 2) => {
+  if (bytes === 0) return "0 Bytes";
+  const k = 1024;
+  const dm = decimals < 0 ? 0 : decimals;
+  const sizes = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return (
+    Number.parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + " " + sizes[i]
+  );
+};
+
+const schema = z.object({
+  file: z
+    .instanceof(File, {
+      message: "Por favor, selecione um arquivo.",
+    })
+    .refine((file) => file.size <= MAX_FILE_SIZE, {
+      message: `O arquivo é muito grande. Escolha um arquivo menor que ${formatBytes(
+        MAX_FILE_SIZE
+      )}.`,
+    })
+    .refine(
+      (file) => {
+        const fileType = file.type;
+        const fileName = file.name.toLowerCase();
+
+        const validMimeTypes = [
+          "text/csv",
+          "application/vnd.ms-excel",
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        ];
+        const validExtensions = [".csv", ".xlsx", ".xls"];
+
+        const hasValidMime = validMimeTypes.includes(fileType);
+        const hasValidExtension = validExtensions.some((ext) =>
+          fileName.endsWith(ext)
+        );
+
+        return hasValidMime || hasValidExtension;
+      },
+      {
+        message:
+          "Por favor, faça upload de um arquivo válido (CSV, XLS ou XLSX).",
+      }
+    )
+    .refine((file) => file.size > 0, {
+      message: "O arquivo não pode estar vazio.",
+    }),
+});
+
+type schema = z.output<typeof schema>;
+
+const state = reactive<Partial<schema>>({
+  file: undefined,
+});
+
+async function onSubmit(event: FormSubmitEvent<schema>) {
+  try {
+    isLoadingUpload.value = true;
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    console.log(event.data);
+    toast.add({
+      title: "Sucesso",
+      description: "Arquivo carregado com sucesso!",
+      icon: "i-lucide-check",
+    });
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    isOpenUploadModal.value = false;
+  } catch (error) {
+    console.error(error);
+    toast.add({
+      title: "Erro",
+      description: "Ocorreu um erro ao carregar o arquivo.",
+      icon: "i-lucide-x-circle",
+      color: "error",
+    });
+  } finally {
+    isLoadingUpload.value = false;
+  }
+}
 </script>
 
 <template>
@@ -89,11 +178,53 @@ const data = ref<TabsItem[]>([
             variant="outline"
             icon="i-lucide-download-cloud"
           />
-          <UButton
-            label="Upload"
-            variant="solid"
-            icon="i-lucide-upload-cloud"
-          />
+          <UModal
+            v-model:open="isOpenUploadModal"
+            :ui="{ footer: 'justify-end' }"
+            title="Upload de arquivo"
+            description="Faça o upload do seu arquivo CSV ou XLSX"
+          >
+            <UButton
+              label="Upload"
+              variant="solid"
+              icon="i-lucide-upload-cloud"
+            />
+
+            <template #body>
+              <UForm
+                :disabled="isLoadingUpload"
+                :schema="schema"
+                :state="state"
+                class="space-y-4"
+                @submit="onSubmit"
+              >
+                <UFormField name="file">
+                  <UFileUpload
+                    v-model="state.file"
+                    label="Selecione ou arraste um arquivo"
+                    description="CSV, XLS, XLSX (max. 10MB)"
+                    accept=".csv,.xls,.xlsx"
+                    class="min-h-48"
+                  />
+                </UFormField>
+
+                <div class="w-full flex justify-end">
+                  <UButton
+                    :disabled="isLoadingUpload"
+                    :loading="isLoadingUpload"
+                    type="submit"
+                    label="Upload"
+                  />
+                </div>
+              </UForm>
+              <!-- <UPlaceholder class="h-48" /> -->
+              <!-- <UFileUpload
+                label="Selecione ou arraste um arquivo"
+                description="CSV, XLSX (max. 10MB)"
+                class="min-h-48"
+              /> -->
+            </template>
+          </UModal>
         </template>
       </UDashboardToolbar>
     </template>
@@ -109,8 +240,17 @@ const data = ref<TabsItem[]>([
           <template #renovacao>
             <UPageGrid class="mt-4">
               <ChartPie title="Alunos ChartPie" description="R$ 3050,00" />
-              <ChartLine title="Alunos ChartLine" description="R$ 1900,00" />
+              <ChartArea title="Alunos ChartArea" description="R$ 3050,00" />
               <ChartBar title="Alunos ChartBar" description="R$ 3050,00" />
+              <ChartDoughnut
+                title="Alunos ChartDoughnut"
+                description="R$ 3050,00"
+              />
+              <ChartLine title="Alunos ChartLine" description="R$ 1900,00" />
+              <ChartPolar
+                title="Alunos ChartDoughnut"
+                description="R$ 3050,00"
+              />
               <ChartBar title="Alunos ChartBar" description="R$ 3050,00" />
               <ChartLine title="Alunos ChartLine" description="R$ 1900,00" />
               <ChartPie title="Alunos ChartPie" description="R$ 3050,00" />

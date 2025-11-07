@@ -1,13 +1,13 @@
 <script lang="ts" setup>
 import type { ChartData } from "chart.js";
-import { Line, Pie } from "vue-chartjs";
+import { Line } from "vue-chartjs";
 
 const props = defineProps<{
   title?: string;
   description?: string;
 }>();
 
-const lineChart = useChart<"line">({
+const areaChart = useChart<"line">({
   decorator: (options) => {
     options.plugins!.legend!.display = false;
     // Faz o gráfico ocupar todo o espaço disponível
@@ -20,22 +20,19 @@ const lineChart = useChart<"line">({
 });
 
 const appConfig = useAppConfig();
-const lineData = computed<ChartData<"line">>(() => ({
+const areaData = computed<ChartData<"line">>(() => ({
   labels: listGenerate(20, (i) => i.toString()),
   datasets: [
     {
       label: "Dataset",
-      borderColor: cssColor(`--color-${appConfig.ui.colors.primary}-500`),
-      fill: false,
-      borderWidth: 3,
-      pointBackgroundColor: cssColor(
-        `--color-${appConfig.ui.colors.primary}-500`
+      borderColor: cssColor(`--color-${appConfig.ui.colors.primary}-300`),
+      backgroundColor: cssColor(
+        `--color-${appConfig.ui.colors.primary}-400`,
+        0.3
       ),
-      pointBorderColor: cssColor(`--color-${appConfig.ui.colors.primary}-500`),
-      pointRadius: 4,
-      pointHoverRadius: 6,
-      tension: 0.2,
-      data: listGenerate(20, (i) => Math.random() * 100 + 20),
+      fill: true,
+      tension: 0.4,
+      data: listGenerate(20, (i) => Math.random() * 5),
       animation: {
         duration: 1500,
       },
@@ -58,7 +55,7 @@ const lineData = computed<ChartData<"line">>(() => ({
         </p>
       </template>
       <div class="relative w-full h-[400px]">
-        <Line :data="lineData" :options="lineChart.options.value" />
+        <Line :data="areaData" :options="areaChart.options.value" />
       </div>
     </UCard>
   </ClientOnly>

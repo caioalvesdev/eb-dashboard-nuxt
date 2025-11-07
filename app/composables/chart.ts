@@ -60,10 +60,10 @@ export const useChart = <T extends ChartType = keyof ChartTypeRegistry>({
           pointStyle: "rectRounded",
         },
         doughnut: {
-          borderWidth: 4,
-          spacing: 16,
+          // borderWidth: 4,
+          // spacing: 16,
           borderColor: borderColor,
-          borderRadius: 8,
+          // borderRadius: 8,
           pointStyle: "rectRounded",
         },
         pie: {

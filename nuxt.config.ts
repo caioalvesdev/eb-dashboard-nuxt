@@ -13,7 +13,7 @@ export default defineNuxtConfig({
       redirectUrl: process.env.NUXT_PUBLIC_REDIRECT_URL,
     },
     private: {
-      supabaseServiceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY,
+      supabaseServiceRoleKey: process.env.NUXT_SUPABASE_SERVICE_KEY,
     },
   },
 

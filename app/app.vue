@@ -38,8 +38,8 @@ useHead({
   },
 });
 
-const title = "EB - Dashboard";
-const description = "Dashboard do EB - Gerencie suas configurações e perfil";
+const title = "RealmTech - Solutions";
+const description = "Dashboard do RealmTech - Gerencie suas configurações e perfil";
 
 useSeoMeta({
   title,
@@ -59,8 +59,10 @@ useFaviconFromTheme();
 <template>
   <UApp>
     <NuxtLoadingIndicator color="var(--ui-primary)" :height="2" />
-    <NuxtLayout>
-      <NuxtPage />
-    </NuxtLayout>
+    <UMain>
+      <NuxtLayout>
+        <NuxtPage />
+      </NuxtLayout>
+    </UMain>
   </UApp>
 </template>

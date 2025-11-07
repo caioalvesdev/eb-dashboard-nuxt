@@ -100,6 +100,7 @@ const app = useAppConfig();
 
 <template>
   <UForm
+    class="lg:max-w-3xl mx-auto w-full"
     id="settings"
     :schema="profileSchema"
     :state="profile"

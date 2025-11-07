@@ -2,11 +2,13 @@
 import type { FormSubmitEvent } from "@nuxt/ui";
 import * as z from "zod";
 
-// Lista usuários do Supabase Auth com seus profiles (usando a API admin)
-const { data: authUsers, refresh: refreshUsers } = await useFetch<any>(
-  "/api/users/list",
-  {
-    default: () => ({ users: [], total: 0 }),
+const { data: authUsers, refresh: refreshUsers } = await useAsyncData(
+  "authUsers",
+  async () => {
+    const { data } = await useFetch("/api/users/list", {
+      default: () => ({ users: [], total: 0 }),
+    });
+    return data.value;
   }
 );
 
@@ -55,7 +57,7 @@ const filteredMembers = computed(() => {
 const toast = useToast();
 
 const validationSchema = z.object({
-  email: z.string().email("E-mail inválido"),
+  email: z.email("E-mail inválido"),
 });
 
 type ProfileSchema = z.output<typeof validationSchema>;
@@ -108,7 +110,7 @@ definePageMeta({
 </script>
 
 <template>
-  <div>
+  <section class="lg:max-w-4xl mx-auto w-full">
     <UPageCard
       title="Membros"
       description="Convide novos membros por endereço de e-mail."
@@ -122,11 +124,12 @@ definePageMeta({
         }"
         v-model:open="isInviteModalOpen"
         title="Convidar novo membro"
+        description="Envie um convite por e-mail para o novo membro."
       >
         <template #body>
           <UForm
             @submit="handleSubmit"
-            :schema="validadeSchema"
+            :schema="validationSchema"
             :state="formState"
           >
             <div class="flex flex-col gap-7">
@@ -175,13 +178,13 @@ definePageMeta({
         <UInput
           v-model="q"
           icon="i-lucide-search"
-          placeholder="Search members"
+          placeholder="Pesquisar membros..."
           autofocus
           class="w-full"
         />
       </template>
 
-      <SettingsMembersList :members="filteredMembers" />
+      <DashboardSettingsMembersList :members="filteredMembers" />
     </UPageCard>
-  </div>
+  </section>
 </template>

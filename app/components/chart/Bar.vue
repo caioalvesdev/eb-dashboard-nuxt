@@ -20,14 +20,21 @@ const barChart = useChart<"bar">({
 });
 
 const appConfig = useAppConfig();
+
+// const backgroundColor = computed(() =>
+//   appConfig.theme.blackAsPrimary
+//     ? cssColor("--color-neutral-100")
+//     : cssColor(`--color-${appConfig.ui.colors.primary}-400`)
+// );
 const barData = computed<ChartData<"bar">>(() => ({
-  labels: listGenerate(20, (i) => i.toString()),
+  labels: listGenerate(5, (i) => i.toString()),
   datasets: [
     {
       label: "Dataset",
       borderColor: cssColor(`--color-${appConfig.ui.colors.primary}-300`),
       backgroundColor: cssColor(`--color-${appConfig.ui.colors.primary}-400`),
-      data: listGenerate(20, (i) => Math.random() * 5),
+      borderRadius: appConfig.theme.radius * 50,
+      data: listGenerate(5, (i) => Math.random() * 5),
       animation: {
         duration: 1500,
       },

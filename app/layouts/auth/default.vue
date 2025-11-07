@@ -21,7 +21,7 @@
             :transition="{ delay: 0.2 + 0.4 * 1 }"
             :in-view-options="{ once: true }"
           >
-            <div>Realm Tech Solutions</div>
+            <div>RealmTech Solutions</div>
           </Motion>
         </template>
 

@@ -123,7 +123,7 @@ async function handleSubmit(event: FormSubmitEvent<ProfileSchema>) {
         <template #body>
           <UForm
             @submit="handleSubmit"
-            :schema="validadeSchema"
+            :schema="validationSchema"
             :state="formState"
           >
             <div class="flex flex-col gap-7">

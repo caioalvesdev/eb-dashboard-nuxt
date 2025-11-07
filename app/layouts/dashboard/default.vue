@@ -119,12 +119,12 @@ onMounted(async () => {
 
   toast.add({
     title:
-      "We use first-party cookies to enhance your experience on our website.",
+      "Usamos cookies próprios para melhorar sua experiência em nosso site.",
     duration: 0,
     close: false,
     actions: [
       {
-        label: "Accept",
+        label: "Aceitar",
         color: "neutral",
         variant: "outline",
         onClick: () => {
@@ -132,7 +132,7 @@ onMounted(async () => {
         },
       },
       {
-        label: "Opt out",
+        label: "Recusar",
         color: "neutral",
         variant: "ghost",
       },
