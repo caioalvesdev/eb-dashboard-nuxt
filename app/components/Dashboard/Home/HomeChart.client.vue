@@ -13,7 +13,7 @@ import {
   VisCrosshair,
   VisTooltip,
 } from "@unovis/vue";
-import type { Period, Range } from "~~/types";
+import type { Period, Range } from "~/types";
 
 const cardRef = useTemplateRef<HTMLElement | null>("cardRef");
 
@@ -66,7 +66,7 @@ const formatNumber = new Intl.NumberFormat("en", {
   maximumFractionDigits: 0,
 }).format;
 
-const formatDate = (date: Date): string => {
+const formatDate = (date: Date): any => {
   return {
     daily: format(date, "d MMM"),
     weekly: format(date, "d MMM"),
@@ -90,7 +90,7 @@ const template = (d: DataRecord) =>
   <UCard
     variant="subtle"
     ref="cardRef"
-    :ui="{ root: 'overflow-visible', body: '!px-0 !pt-0 !pb-3' }"
+    :ui="{ root: 'overflow-visible', body: 'px-0! pt-0! pb-3!' }"
   >
     <template #header>
       <div>

@@ -6,6 +6,12 @@ export default defineNuxtConfig({
     "vite:extendConfig": extendViteConfig,
   },
 
+  router: {
+    options: {
+      scrollBehaviorType: "smooth",
+    },
+  },
+
   runtimeConfig: {
     public: {
       supabaseUrl: process.env.NUXT_PUBLIC_SUPABASE_URL,
@@ -15,17 +21,6 @@ export default defineNuxtConfig({
     private: {
       supabaseServiceRoleKey: process.env.NUXT_SUPABASE_SERVICE_KEY,
     },
-  },
-
-  router: {
-    options: {
-      scrollBehaviorType: "smooth",
-    },
-  },
-
-  echarts: {
-    charts: ["BarChart"],
-    components: ["DatasetComponent", "GridComponent", "TooltipComponent"],
   },
 
   supabase: {
@@ -45,6 +40,7 @@ export default defineNuxtConfig({
   },
 
   css: ["~/assets/css/main.css"],
+  spaLoadingTemplate: "spa-loading-template.html",
 
   modules: [
     "@nuxt/eslint",
@@ -58,6 +54,7 @@ export default defineNuxtConfig({
     "motion-v/nuxt",
   ],
 });
+
 function extendViteConfig(config: import("vite").UserConfig) {
   const plugin = config.plugins?.find((plugin) =>
     isPlugin(plugin, "nuxt:environments")
