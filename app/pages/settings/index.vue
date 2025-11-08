@@ -89,13 +89,10 @@ async function onFileChange(e: Event): Promise<void> {
 function onFileClick() {
   fileRef.value?.click();
 }
-onMounted(async () => {
-  await nextTick();
-});
+
 definePageMeta({
   layout: "dashboard-default",
 });
-const app = useAppConfig();
 </script>
 
 <template>
