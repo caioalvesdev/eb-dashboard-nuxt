@@ -17,6 +17,12 @@ export default defineNuxtConfig({
     },
   },
 
+  router: {
+    options: {
+      scrollBehaviorType: "smooth",
+    },
+  },
+
   echarts: {
     charts: ["BarChart"],
     components: ["DatasetComponent", "GridComponent", "TooltipComponent"],

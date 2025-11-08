@@ -6,6 +6,7 @@ import type { FormSubmitEvent } from "@nuxt/ui";
 
 definePageMeta({
   layout: "dashboard-default",
+  scrollToTop: true,
 });
 
 const items = [
@@ -122,7 +123,6 @@ const downloadTemplateLoading = ref<boolean>(false);
 async function handleDownloadTemplate() {
   try {
     downloadTemplateLoading.value = true;
-    // Simula o download do template
     await new Promise((resolve) => setTimeout(resolve, 1500));
     toast.add({
       title: "Sucesso",
@@ -288,24 +288,25 @@ async function onSubmit(event: FormSubmitEvent<schema>) {
           title="MBA"
           description="Carregue seus arquivos Excel ou CSV para criar gráficos interativos"
         />
+
         <UTabs :items="data" class="w-full">
           <template #renovacao>
             <UPageGrid class="mt-4">
-              <ChartPie title="Alunos ChartPie" description="R$ 3050,00" />
-              <ChartArea title="Alunos ChartArea" description="R$ 3050,00" />
-              <ChartBar title="Alunos ChartBar" description="R$ 3050,00" />
-              <ChartDoughnut
+              <AppChartPie title="Alunos ChartPie" description="R$ 3050,00" />
+              <AppChartArea title="Alunos ChartArea" description="R$ 3050,00" />
+              <AppChartBar title="Alunos ChartBar" description="R$ 3050,00" />
+              <AppChartDoughnut
                 title="Alunos ChartDoughnut"
                 description="R$ 3050,00"
               />
-              <ChartLine title="Alunos ChartLine" description="R$ 1900,00" />
-              <ChartPolar
+              <AppChartLine title="Alunos ChartLine" description="R$ 1900,00" />
+              <AppChartPolar
                 title="Alunos ChartDoughnut"
                 description="R$ 3050,00"
               />
-              <ChartBar title="Alunos ChartBar" description="R$ 3050,00" />
-              <ChartLine title="Alunos ChartLine" description="R$ 1900,00" />
-              <ChartPie title="Alunos ChartPie" description="R$ 3050,00" />
+              <AppChartBar title="Alunos ChartBar" description="R$ 3050,00" />
+              <AppChartLine title="Alunos ChartLine" description="R$ 1900,00" />
+              <AppChartPie title="Alunos ChartPie" description="R$ 3050,00" />
             </UPageGrid>
           </template>
           <template #base-alunos-info>

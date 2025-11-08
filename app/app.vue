@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { useStorage } from "@vueuse/core";
 import colors from "tailwindcss/colors";
 
 const appConfig = useAppConfig();
@@ -50,12 +49,6 @@ useSeoMeta({
 });
 
 useFaviconFromTheme();
-
-// onMounted(() => {
-//   appConfig.ui.colors.primary = preferences.value.theme.primaryColor;
-//   appConfig.ui.colors.neutral = preferences.value.theme.neutralColor;
-//   colorMode.preference = preferences.value.appearance.colorMode;
-// });
 </script>
 <template>
   <UApp>
