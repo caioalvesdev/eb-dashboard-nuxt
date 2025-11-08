@@ -19,7 +19,7 @@ definePageMeta({
       as-child
       :initial="{ opacity: 0, transform: 'translateY(10px)' }"
       :while-in-view="{ opacity: 1, transform: 'translateY(0)' }"
-      :transition="{ delay: 0.2 + 0.4 * 2 }"
+      :transition="{ delay: 0.1 + 0.3 * 2 }"
       :in-view-options="{ once: true }"
     >
       <UEmpty
