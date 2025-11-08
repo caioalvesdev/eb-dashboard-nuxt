@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { chatMessage } from "#build/ui";
 import type { NavigationMenuItem } from "@nuxt/ui";
 
 // const route = useRoute();

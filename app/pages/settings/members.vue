@@ -159,9 +159,10 @@ definePageMeta({
           </UForm>
         </template>
         <UButton
-          label="Convidar pessoas"
+          label="Convidar usuário"
           color="neutral"
           class="w-fit lg:ms-auto"
+          icon="i-lucide-user-plus"
           @click="isInviteModalOpen = true"
         />
       </UModal>

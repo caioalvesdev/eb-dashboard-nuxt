@@ -83,7 +83,13 @@ const handleDeleteAccount = async () => {
         />
       </UFormField>
 
-      <UButton disabled label="Atualizar" class="w-fit" type="submit" />
+      <UButton
+        disabled
+        label="Atualizar"
+        color="neutral"
+        class="w-fit"
+        type="submit"
+      />
     </UForm>
   </UPageCard>
 

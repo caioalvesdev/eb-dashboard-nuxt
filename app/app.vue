@@ -39,7 +39,8 @@ useHead({
 });
 
 const title = "RealmTech - Solutions";
-const description = "Dashboard do RealmTech - Gerencie suas configurações e perfil";
+const description =
+  "Dashboard do RealmTech - Gerencie suas configurações e perfil";
 
 useSeoMeta({
   title,
@@ -59,6 +60,14 @@ useFaviconFromTheme();
 <template>
   <UApp>
     <NuxtLoadingIndicator color="var(--ui-primary)" :height="2" />
+
+    <UBanner
+      id="new-release-v2"
+      icon="i-lucide-rocket"
+      title="RealmDash v2 foi oficialmente lançado!"
+      close
+    />
+
     <UMain>
       <NuxtLayout>
         <NuxtPage />
