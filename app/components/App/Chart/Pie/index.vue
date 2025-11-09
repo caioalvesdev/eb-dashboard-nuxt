@@ -2,19 +2,38 @@
 import type { ChartData } from "chart.js";
 import { Pie } from "vue-chartjs";
 
-const props = defineProps<{
-  title?: string;
-  description?: string;
-}>();
+const props = withDefaults(
+  defineProps<{
+    title?: string;
+    description?: string;
+    data?: MaybeRef<Record<string, unknown>[]>;
+    category?: string;
+  }>(),
+  {
+    title: "Gráfico de Pizza",
+    description: "Este é um gráfico de pizza de exemplo.",
+    data: () => [],
+    category: "semana",
+  }
+);
 
 const pieChart = useChart<"pie">({
   decorator: (options) => {
-    // Remove os números dos eixos (scales não são usados em gráficos de pizza)
     options.plugins!.legend!.align = "center";
     options.scales = {};
   },
 });
 
+const chartData = computed(() => {
+  const dataArray = unref(props.data) || [];
+  const field = props.category || "semana";
+
+  const data = dataArray.map((item) => {
+    return item[field] as number;
+  });
+  const total = data.reduce((acc, val) => acc + val, 0);
+  return { data, total };
+});
 const appConfig = useAppConfig();
 const pieData = computed<ChartData<"pie">>(() => ({
   labels: ["Semana 1", "Semana 2", "Semana 3", "Semana 4"],
@@ -22,7 +41,7 @@ const pieData = computed<ChartData<"pie">>(() => ({
     {
       color: appConfig.ui.colors.primary,
       borderColor: cssColor(`--color-${appConfig.ui.colors.primary}-300`),
-      label: "Dataset",
+      label: "Valor",
       animation: {
         duration: 1500,
       },
@@ -33,10 +52,17 @@ const pieData = computed<ChartData<"pie">>(() => ({
         cssColor(`--color-${appConfig.ui.colors.primary}-600`),
         cssColor(`--color-${appConfig.ui.colors.primary}-800`),
       ],
-      data: listGenerate(4, (i) => Math.random() * 5),
+      data: chartData.value.data,
     },
   ],
 }));
+
+const formattedTotal = computed(() => {
+  return new Intl.NumberFormat("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+  }).format(chartData.value.total || 0);
+});
 </script>
 
 <template>
@@ -49,12 +75,9 @@ const pieData = computed<ChartData<"pie">>(() => ({
       <template v-if="props.title || props.description" #header>
         <p class="text-xs text-muted uppercase mb-1.5">{{ props.title }}</p>
         <p class="text-3xl text-highlighted font-semibold">
-          {{ props.description }}
+          {{ formattedTotal || props.description }}
         </p>
       </template>
-      <!-- <div class="relative w-full" :style="{ height: '30svh' }">
-        <Pie :data="pieData" :options="pieChart.options.value" />
-      </div> -->
 
       <div class="relative w-full h-[400px]">
         <Pie :data="pieData" :options="pieChart.options.value" />

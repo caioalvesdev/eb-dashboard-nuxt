@@ -172,6 +172,20 @@ async function onSubmit(event: FormSubmitEvent<schema>) {
     isLoadingUpload.value = false;
   }
 }
+
+const { data: renovacao } = await useAsyncData("renovacao-data", async () => {
+  const { data, error } = await useFetch("/api/dashboard/renovacao", {
+    method: "GET",
+    query: { month: 11, year: 2025 },
+    default: () => [],
+    transform: (data) => data.data,
+  });
+
+  if (error.value) {
+    console.error("Erro ao buscar dados de renovação:", error.value.message);
+  }
+  return data;
+});
 </script>
 
 <template>
@@ -281,31 +295,162 @@ async function onSubmit(event: FormSubmitEvent<schema>) {
 
         <UTabs :items="data" class="w-full">
           <template #renovacao>
-            <UPageGrid class="mt-4">
-              <AppChartPie title="Alunos ChartPie" description="R$ 3050,00" />
-              <AppChartArea title="Alunos ChartArea" description="R$ 3050,00" />
-              <AppChartBar title="Alunos ChartBar" description="R$ 3050,00" />
+            <UPageGrid :ui="{ base: 'grid grid-cols-12' }" class="mt-4">
+              <AppChartBar
+                class="col-span-full xl:col-span-6"
+                title="Meta vs Valor Realizado"
+                description="R$ 1900,00"
+                :data="(renovacao as any)"
+                index="semana"
+                :categories="['meta_valor', 'valor_realizado', 'meta_valor']"
+              />
+              <AppChartBar
+                class="col-span-full xl:col-span-6"
+                title="Meta vs Valor Realizado"
+                description="R$ 1900,00"
+                :data="(renovacao as any)"
+                index="semana"
+                :categories="['meta_valor', 'valor_realizado', 'meta_valor']"
+              />
               <AppChartDoughnut
-                title="Alunos ChartDoughnut"
-                description="R$ 3050,00"
+                class="col-span-full xl:col-span-4"
+                title="Média Porcentagem de Contratos Atingida"
+                :data="(renovacao as any)"
+                category="porcentagem_contratos"
               />
-              <AppChartLine title="Alunos ChartLine" description="R$ 1900,00" />
-              <AppChartPolar
-                title="Alunos ChartDoughnut"
-                description="R$ 3050,00"
+              <AppChartPie
+                class="col-span-full xl:col-span-4"
+                title="Valores Cancelados por Semana"
+                :data="(renovacao as any)"
+                category="valores_cancelados"
               />
-              <AppChartBar title="Alunos ChartBar" description="R$ 3050,00" />
-              <AppChartLine title="Alunos ChartLine" description="R$ 1900,00" />
-              <AppChartPie title="Alunos ChartPie" description="R$ 3050,00" />
+              <AppChartPie
+                class="col-span-full xl:col-span-4"
+                title="Quantidade Cancelada por Semana"
+                :data="(renovacao as any)"
+                category="quantidade_cancelados"
+              />
+              <AppChartLine
+                class="col-span-full xl:col-span-8"
+                title="Evolução de Performance"
+                description="R$ 1900,00"
+                :data="(renovacao as any)"
+                index="semana"
+                :categories="[
+                  'meta_valor',
+                  'valor_realizado',
+                  'valores_cancelados',
+                ]"
+              />
+              <AppChartLine
+                class="col-span-full xl:col-span-4"
+                title="Evolução da Eficiência (%)"
+                description="R$ 1900,00"
+                :data="(renovacao as any)"
+                index="semana"
+                :categories="['porcentagem_contratos']"
+              />
+
+              <AppChartBar
+                class="col-span-full xl:col-span-6"
+                title="Realizados vs Cancelados (Valores)"
+                description="R$ 1900,00"
+                :data="(renovacao as any)"
+                index="semana"
+                :categories="['valor_realizado', 'valores_cancelados']"
+              />
+
+              <AppChartBar
+                class="col-span-full xl:col-span-6"
+                title="Realizados vs Cancelados (Quantidade)"
+                description="R$ 1900,00"
+                :data="(renovacao as any)"
+                index="semana"
+                :categories="['quantidade_realizada', 'quantidade_cancelados']"
+              />
+
+              <AppChartArea
+                class="col-span-full xl:col-span-12"
+                title="Visão Geral da Performance de Renovação"
+                description="R$ 1900,00"
+                :data="(renovacao as any)"
+                index="semana"
+                :categories="['meta_valor', 'valor_realizado', 'valores_cancelados', 'meta_contratos']"
+              />
             </UPageGrid>
           </template>
           <template #base-alunos-info>
-            <UPageGrid class="mt-4">
-              <DashboardHomeChart
-                v-for="i in 12"
-                :key="i"
-                :period="period"
-                :range="range"
+            <UPageGrid :ui="{ base: 'grid grid-cols-12' }" class="mt-4">
+              <AppChartBar
+                class="col-span-full xl:col-span-6"
+                title="Meta vs Valor Realizado"
+                description="R$ 1900,00"
+                :data="(renovacao as any)"
+                index="semana"
+                :categories="['meta_valor', 'valor_realizado', 'meta_valor']"
+              />
+              <AppChartBar
+                class="col-span-full xl:col-span-6"
+                title="Meta vs Valor Realizado"
+                description="R$ 1900,00"
+                :data="(renovacao as any)"
+                index="semana"
+                :categories="['meta_valor', 'valor_realizado', 'meta_valor']"
+              />
+              <AppChartDoughnut
+                class="col-span-full xl:col-span-4"
+                title="Média Porcentagem de Contratos Atingida"
+                :data="(renovacao as any)"
+                category="porcentagem_contratos"
+              />
+              <AppChartPie
+                class="col-span-full xl:col-span-4"
+                title="Valores Cancelados por Semana"
+                :data="(renovacao as any)"
+                category="valores_cancelados"
+              />
+              <AppChartPie
+                class="col-span-full xl:col-span-4"
+                title="Quantidade Cancelada por Semana"
+                :data="(renovacao as any)"
+                category="quantidade_cancelados"
+              />
+              <AppChartLine
+                class="col-span-full xl:col-span-8"
+                title="Evolução de Performance"
+                description="R$ 1900,00"
+                :data="(renovacao as any)"
+                index="semana"
+                :categories="[
+                  'meta_valor',
+                  'valor_realizado',
+                  'valores_cancelados',
+                ]"
+              />
+              <AppChartLine
+                class="col-span-full xl:col-span-4"
+                title="Evolução da Eficiência (%)"
+                description="R$ 1900,00"
+                :data="(renovacao as any)"
+                index="semana"
+                :categories="['porcentagem_contratos']"
+              />
+              <!-- <AppChartArea
+                class="col-span-full xl:col-span-4"
+                title="Alunos ChartArea"
+                description="R$ 3050,00"
+              /> -->
+
+              <AppChartPolar
+                class="col-span-full xl:col-span-4"
+                title="Alunos ChartDoughnut"
+                description="R$ 3050,00"
+              />
+
+              <AppChartPie
+                class="col-span-full xl:col-span-4"
+                title="Alunos ChartPie"
+                description="R$ 3050,00"
               />
             </UPageGrid>
           </template>
