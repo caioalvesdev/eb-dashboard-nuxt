@@ -21,6 +21,8 @@ const lineChart = useChart<"line">({
   decorator: (options) => {
     options.plugins!.legend!.display = true;
     options.maintainAspectRatio = true;
+    options.plugins!.legend!.align = "end";
+    options.plugins!.legend!.position = "top";
     // options.responsive = true;
     options.scales!.x!.ticks!.display = true;
     options.scales!.y!.ticks!.display = true;
@@ -61,7 +63,7 @@ const datasets = computed(() => {
     return {
       label: String(cat),
       borderColor: cssColor(`--color-${appConfig.ui.colors.primary}-${shade}`),
-      borderWidth: 3,
+      borderWidth: 2,
       backgroundColor: cssColor(
         `--color-${appConfig.ui.colors.primary}-${shade}`,
         0.3
@@ -92,8 +94,6 @@ const lineData = computed<ChartData<"line">>(() => ({
       :ui="{ root: 'overflow-visible', body: 'px-0! py-2!' }"
     >
       <template v-if="props.title || props.description" #header>
-        <!-- {{ chartData }} -->
-        <!-- {{ props.data }} -->
         <p class="text-xs text-muted uppercase mb-1.5">{{ props.title }}</p>
         <p class="text-3xl text-highlighted font-semibold">
           {{ props.description }}

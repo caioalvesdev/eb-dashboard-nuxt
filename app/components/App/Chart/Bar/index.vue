@@ -20,6 +20,8 @@ const props = withDefaults(
 const barChart = useChart<"bar">({
   decorator: (options) => {
     options.plugins!.legend!.display = true;
+    options.plugins!.legend!.align = "end";
+    options.plugins!.legend!.position = "top";
     // Faz o gráfico ocupar todo o espaço disponível
     options.maintainAspectRatio = false;
     options.responsive = true;

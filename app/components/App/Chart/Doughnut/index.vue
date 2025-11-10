@@ -7,62 +7,81 @@ const props = withDefaults(
     title?: string;
     description?: string;
     data?: MaybeRef<T[]>;
-    category?: keyof T;
+    index: string;
+    category: keyof T;
   }>(),
   {
-    title: "Gráfico de Pizza",
-    description: "Este é um gráfico de pizza de exemplo.",
+    title: "Gráfico de Doughnut",
+    description: "Este é um gráfico de doughnut de exemplo.",
     data: () => [],
-    category: "semana",
+    category: "semana" as any,
   }
 );
 
 const doughnutChart = useChart<"doughnut">({
   decorator: (options) => {
-    // Remove os números dos eixos (scales não são usados em gráficos doughnut)
     options.plugins!.legend!.align = "center";
-    options.responsive = true;
+    options.plugins!.legend!.position = "top";
     options.scales = {};
   },
 });
 
-const chartData = computed(() => {
-  const dataArray = unref(props.data) || [];
-  const field = props.category || "semana";
+// Normalized raw data (array)
+const rawData = computed(() => unref(props.data) || []);
 
-  const data = dataArray.map((item) => {
-    return item[field] as number;
+// Labels for doughnut chart derived from the `index` prop (e.g. "Semana 1", "Semana 2")
+const labels = computed(() => {
+  return rawData.value.map((item) => {
+    const idx = item[props.index];
+    const name = `${
+      props.index?.charAt(0).toUpperCase() + props.index?.slice(1)
+    } ${idx}`;
+    return String(name);
   });
-  const total = data.reduce((acc, val) => acc + val, 0);
-  return { data, total };
+});
+
+// Data values for the single category
+const doughnutValues = computed(() => {
+  return rawData.value.map((item) => {
+    const v = item[props.category];
+    // try to coerce numeric-like strings to numbers
+    const n =
+      typeof v === "string" ? Number(String(v).replace(/[^0-9.-]+/g, "")) : v;
+    return typeof n === "number" && !Number.isNaN(n) ? (n as number) : 0;
+  });
+});
+
+// Total for display/formatting
+const total = computed(() => {
+  return doughnutValues.value.reduce((acc, val) => acc + val, 0);
 });
 
 const appConfig = useAppConfig();
 const doughnutData = computed<ChartData<"doughnut">>(() => ({
-  labels: ["Semana 1", "Semana 2", "Semana 3", "Semana 4"],
+  labels: labels.value,
   datasets: [
     {
       color: appConfig.ui.colors.primary,
       borderColor: cssColor(`--color-${appConfig.ui.colors.primary}-300`),
-      label: "Dataset",
+      label: String(props.category),
       animation: {
         duration: 1500,
       },
-      backgroundColor: [
-        cssColor(`--color-${appConfig.ui.colors.primary}-200`),
-        cssColor(`--color-${appConfig.ui.colors.primary}-400`),
-        cssColor(`--color-${appConfig.ui.colors.primary}-600`),
-        cssColor(`--color-${appConfig.ui.colors.primary}-800`),
-      ],
-      data: chartData.value.data,
+      backgroundColor: doughnutValues.value.map((_, index) => {
+        const shades = [200, 300, 400, 500, 600, 700, 800, 900];
+        const shade = shades[index % shades.length];
+        return cssColor(`--color-${appConfig.ui.colors.primary}-${shade}`);
+      }),
+      data: doughnutValues.value,
     },
   ],
 }));
+
 const formattedTotal = computed(() => {
   return new Intl.NumberFormat("pt-BR", {
     style: "currency",
     currency: "BRL",
-  }).format(chartData.value.total || 0);
+  }).format(total.value || 0);
 });
 </script>
 

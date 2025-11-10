@@ -316,18 +316,21 @@ const { data: renovacao } = await useAsyncData("renovacao-data", async () => {
                 class="col-span-full xl:col-span-4"
                 title="Média Porcentagem de Contratos Atingida"
                 :data="(renovacao as any)"
+                index="semana"
                 category="porcentagem_contratos"
               />
               <AppChartPie
                 class="col-span-full xl:col-span-4"
                 title="Valores Cancelados por Semana"
                 :data="(renovacao as any)"
+                index="semana"
                 category="valores_cancelados"
               />
               <AppChartPie
                 class="col-span-full xl:col-span-4"
                 title="Quantidade Cancelada por Semana"
                 :data="(renovacao as any)"
+                index="semana"
                 category="quantidade_cancelados"
               />
               <AppChartLine
@@ -375,7 +378,12 @@ const { data: renovacao } = await useAsyncData("renovacao-data", async () => {
                 description="R$ 1900,00"
                 :data="(renovacao as any)"
                 index="semana"
-                :categories="['meta_valor', 'valor_realizado', 'valores_cancelados', 'meta_contratos']"
+                :categories="[
+                  'meta_valor',
+                  'valor_realizado',
+                  'valores_cancelados',
+                  'meta_contratos',
+                ]"
               />
             </UPageGrid>
           </template>
@@ -401,18 +409,21 @@ const { data: renovacao } = await useAsyncData("renovacao-data", async () => {
                 class="col-span-full xl:col-span-4"
                 title="Média Porcentagem de Contratos Atingida"
                 :data="(renovacao as any)"
+                index="semana"
                 category="porcentagem_contratos"
               />
               <AppChartPie
                 class="col-span-full xl:col-span-4"
                 title="Valores Cancelados por Semana"
                 :data="(renovacao as any)"
+                index="semana"
                 category="valores_cancelados"
               />
               <AppChartPie
                 class="col-span-full xl:col-span-4"
                 title="Quantidade Cancelada por Semana"
                 :data="(renovacao as any)"
+                index="semana"
                 category="quantidade_cancelados"
               />
               <AppChartLine
@@ -447,11 +458,12 @@ const { data: renovacao } = await useAsyncData("renovacao-data", async () => {
                 description="R$ 3050,00"
               />
 
-              <AppChartPie
+              <!-- <AppChartPie
                 class="col-span-full xl:col-span-4"
                 title="Alunos ChartPie"
+                index="semana"
                 description="R$ 3050,00"
-              />
+              /> -->
             </UPageGrid>
           </template>
           <template #gestao-contratos-mba>
