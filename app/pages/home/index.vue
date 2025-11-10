@@ -36,21 +36,25 @@ const period = ref<any>("Diário");
 const data = ref<TabsItem[]>([
   {
     label: "Renovação",
+    value: "renovacao",
     content: "This is the account content.",
     slot: "renovacao",
   },
   {
     label: "Base de alunos info",
+    value: "base-alunos-info",
     content: "This is the password content.",
     slot: "base-alunos-info",
   },
   {
     label: "Gestão de Contratos MBA",
+    value: "gestao-contratos-mba",
     content: "This is the password content.",
     slot: "gestao-contratos-mba",
   },
   {
     label: "Carteira MBA",
+    value: "carteira-mba",
     content: "This is the password content.",
     slot: "carteira-mba",
   },
@@ -173,19 +177,97 @@ async function onSubmit(event: FormSubmitEvent<schema>) {
   }
 }
 
-const { data: renovacao } = await useAsyncData("renovacao-data", async () => {
-  const { data, error } = await useFetch("/api/dashboard/renovacao", {
-    method: "GET",
-    query: { month: 11, year: 2025 },
-    default: () => [],
-    transform: (data) => data.data,
-  });
+const {
+  data: renovacao,
+  refresh: refreshRenovacao,
+  pending: pendingRenovacao,
+} = await useAsyncData(
+  "renovacao",
+  async () => {
+    try {
+      const data = await $fetch("/api/dashboard/renovacao", {
+        method: "GET",
+        query: { month: 11, year: 2025 },
+        default: () => [],
+      });
 
-  if (error.value) {
-    console.error("Erro ao buscar dados de renovação:", error.value.message);
-  }
-  return data;
-});
+      return data;
+    } catch (error) {
+      console.error("Erro ao buscar dados de renovação:", error);
+      toast.add({
+        title: "Erro",
+        description: "Ocorreu um erro ao buscar os dados de renovação.",
+        icon: "i-lucide-x-circle",
+        color: "error",
+      });
+    }
+  },
+  { default: () => [], transform: (data: any) => data.data || [] }
+);
+const {
+  data: baseAlunosInfo,
+  refresh: refreshBaseAlunosInfo,
+  pending: pendingBaseAlunosInfo,
+} = await useAsyncData(
+  "base-alunos-info",
+  async () => {
+    try {
+      const data = await $fetch("/api/dashboard/base-alunos-info", {
+        method: "GET",
+        query: { month: 11, year: 2025 },
+        default: () => [],
+      });
+
+      return data;
+    } catch (error) {
+      console.error("Erro ao buscar dados de renovação:", error);
+      toast.add({
+        title: "Erro",
+        description: "Ocorreu um erro ao buscar os dados de renovação.",
+        icon: "i-lucide-x-circle",
+        color: "error",
+      });
+    }
+  },
+  { default: () => [], transform: (data: any) => data.data || [] }
+);
+
+// const { data: renovacao, refresh } = await useFetch(
+//   "/api/dashboard/renovacao",
+//   {
+//     query: { month: 11, year: 2025 },
+//     method: "GET",
+//     default: () => [],
+//     transform: (data: any) => data.data || [],
+//   }
+// );
+// const { data: baseAlunosInfo } = await useFetch(
+//   "/api/dashboard/base-alunos-info",
+//   {
+//     query: { month: 11, year: 2025 },
+//     method: "GET",
+//     default: () => [],
+//     transform: (data: any) => data.data || [],
+//   }
+// );
+const active = ref<string>("renovacao");
+// watch(active, async (newVal) => {
+//   if (!newVal) return;
+//   console.log({ newVal });
+//   await refresh();
+// });
+const pending = computed(
+  () => pendingRenovacao.value || pendingBaseAlunosInfo.value
+);
+function handleRefreshData() {
+  refreshRenovacao();
+  refreshBaseAlunosInfo();
+  toast.add({
+    title: "Atualizado",
+    description: "Os dados foram atualizados com sucesso.",
+    duration: 2500,
+  });
+}
 </script>
 
 <template>
@@ -217,7 +299,16 @@ const { data: renovacao } = await useAsyncData("renovacao-data", async () => {
 
           <DashboardHomePeriodSelect v-model="period" :range="range" />
         </template>
+
         <template #right>
+          <UButton
+            label="Recarregar"
+            variant="soft"
+            icon="i-lucide-refresh-cw"
+            :loading="pending"
+            :disable="pending"
+            @click="handleRefreshData"
+          />
           <UButton
             label="Baixar template"
             variant="outline"
@@ -293,7 +384,7 @@ const { data: renovacao } = await useAsyncData("renovacao-data", async () => {
           description="Carregue seus arquivos Excel ou CSV para criar gráficos interativos"
         />
 
-        <UTabs :items="data" class="w-full">
+        <UTabs :items="data" class="w-full" v-model="active">
           <template #renovacao>
             <UPageGrid :ui="{ base: 'grid grid-cols-12' }" class="mt-4">
               <AppChartBar
@@ -387,90 +478,359 @@ const { data: renovacao } = await useAsyncData("renovacao-data", async () => {
               />
             </UPageGrid>
           </template>
+
           <template #base-alunos-info>
             <UPageGrid :ui="{ base: 'grid grid-cols-12' }" class="mt-4">
               <AppChartBar
-                class="col-span-full xl:col-span-6"
-                title="Meta vs Valor Realizado"
+                class="col-span-full xl:col-span-4"
+                title="Master: Ativo vs Inativo"
                 description="R$ 1900,00"
-                :data="(renovacao as any)"
+                :data="(baseAlunosInfo as any)"
                 index="semana"
-                :categories="['meta_valor', 'valor_realizado', 'meta_valor']"
+                :categories="['master_ativo', 'master_inativo']"
               />
+
+              <AppChartBar
+                class="col-span-full xl:col-span-4"
+                title="Pleno: Ativo vs Inativo"
+                description="R$ 1900,00"
+                :data="(baseAlunosInfo as any)"
+                index="semana"
+                :categories="['pleno_ativo', 'pleno_inativos']"
+              />
+
+              <AppChartBar
+                class="col-span-full xl:col-span-4"
+                title="Senior: Ativo vs Inativo"
+                description="R$ 1900,00"
+                :data="(baseAlunosInfo as any)"
+                index="semana"
+                :categories="['senior_ativo', 'senior_inativo']"
+              />
+
+              <AppChartLine
+                class="col-span-full xl:col-span-6"
+                title="Evolução dos Ativos"
+                description="R$ 1900,00"
+                :data="(baseAlunosInfo as any)"
+                index="semana"
+                :categories="['master_ativo', 'pleno_ativo', 'senior_ativo']"
+              />
+
+              <AppChartLine
+                class="col-span-full xl:col-span-6"
+                title="Evolução dos Inativos"
+                description="R$ 1900,00"
+                :data="(baseAlunosInfo as any)"
+                index="semana"
+                :categories="[
+                  'master_inativo',
+                  'pleno_inativos',
+                  'senior_inativo',
+                ]"
+              />
+
               <AppChartBar
                 class="col-span-full xl:col-span-6"
-                title="Meta vs Valor Realizado"
+                title="EB Skills Basic"
+                description="R$ 1900,00"
+                :data="(baseAlunosInfo as any)"
+                index="semana"
+                :categories="[
+                  'eb_skills_basic_ativos',
+                  'eb_skills_basic_inativos',
+                ]"
+              />
+
+              <AppChartBar
+                class="col-span-full xl:col-span-6"
+                title="EB Skills Completo"
+                description="R$ 1900,00"
+                :data="(baseAlunosInfo as any)"
+                index="semana"
+                :categories="[
+                  'eb_skills_completo_ativos',
+                  'eb_skills_completo_inativos',
+                ]"
+              />
+
+              <AppChartBar
+                class="col-span-full xl:col-span-6"
+                title="EB Skills Tira Dúvidas"
+                description="R$ 1900,00"
+                :data="(baseAlunosInfo as any)"
+                index="semana"
+                :categories="[
+                  'eb_skills_tira_duvidas_ativos',
+                  'eb_skills_tira_duvidas_inativos',
+                ]"
+              />
+
+              <AppChartBar
+                class="col-span-full xl:col-span-6"
+                title="EB Skills Cursos"
+                description="R$ 1900,00"
+                :data="(baseAlunosInfo as any)"
+                index="semana"
+                :categories="[
+                  'eb_skills_cursos_ativos',
+                  'eb_skills_cursos_inativos',
+                ]"
+              />
+
+              <AppChartLine
+                class="col-span-full xl:col-span-8"
+                title="Evolução: Ativos vs Inativos"
+                description="R$ 1900,00"
+                :data="(baseAlunosInfo as any)"
+                index="semana"
+                :categories="['total_ativos', 'total_inativos']"
+              />
+
+              <AppChartPie
+                class="col-span-full xl:col-span-4"
+                title="Porcentagem de Ativos"
+                :data="(baseAlunosInfo as any)"
+                index="semana"
+                category="porcentagem_ativos"
+              />
+            </UPageGrid>
+          </template>
+
+          <template #gestao-contratos-mba>
+            <UPageGrid :ui="{ base: 'grid grid-cols-12' }" class="mt-4">
+              <AppChartBar
+                class="col-span-full xl:col-span-4"
+                title="Master: Ativo vs Inativo"
                 description="R$ 1900,00"
                 :data="(renovacao as any)"
                 index="semana"
-                :categories="['meta_valor', 'valor_realizado', 'meta_valor']"
+                :categories="['master_ativo', 'master_inativo']"
               />
-              <AppChartDoughnut
+
+              <AppChartBar
                 class="col-span-full xl:col-span-4"
-                title="Média Porcentagem de Contratos Atingida"
+                title="Pleno: Ativo vs Inativo"
+                description="R$ 1900,00"
                 :data="(renovacao as any)"
                 index="semana"
-                category="porcentagem_contratos"
+                :categories="['pleno_ativo', 'pleno_inativos']"
               />
-              <AppChartPie
+
+              <AppChartBar
                 class="col-span-full xl:col-span-4"
-                title="Valores Cancelados por Semana"
+                title="Senior: Ativo vs Inativo"
+                description="R$ 1900,00"
                 :data="(renovacao as any)"
                 index="semana"
-                category="valores_cancelados"
+                :categories="['senior_ativo', 'senior_inativo']"
               />
-              <AppChartPie
-                class="col-span-full xl:col-span-4"
-                title="Quantidade Cancelada por Semana"
-                :data="(renovacao as any)"
-                index="semana"
-                category="quantidade_cancelados"
-              />
+
               <AppChartLine
-                class="col-span-full xl:col-span-8"
-                title="Evolução de Performance"
+                class="col-span-full xl:col-span-6"
+                title="Evolução dos Ativos"
+                description="R$ 1900,00"
+                :data="(renovacao as any)"
+                index="semana"
+                :categories="['master_ativo', 'pleno_ativo', 'senior_ativo']"
+              />
+
+              <AppChartLine
+                class="col-span-full xl:col-span-6"
+                title="Evolução dos Inativos"
                 description="R$ 1900,00"
                 :data="(renovacao as any)"
                 index="semana"
                 :categories="[
-                  'meta_valor',
-                  'valor_realizado',
-                  'valores_cancelados',
+                  'master_inativo',
+                  'pleno_inativos',
+                  'senior_inativo',
                 ]"
               />
-              <AppChartLine
-                class="col-span-full xl:col-span-4"
-                title="Evolução da Eficiência (%)"
+
+              <AppChartBar
+                class="col-span-full xl:col-span-6"
+                title="EB Skills Completo"
                 description="R$ 1900,00"
                 :data="(renovacao as any)"
                 index="semana"
-                :categories="['porcentagem_contratos']"
-              />
-              <!-- <AppChartArea
-                class="col-span-full xl:col-span-4"
-                title="Alunos ChartArea"
-                description="R$ 3050,00"
-              /> -->
-
-              <AppChartPolar
-                class="col-span-full xl:col-span-4"
-                title="Alunos ChartDoughnut"
-                description="R$ 3050,00"
+                :categories="[
+                  'eb_skills_basic_ativos',
+                  'eb_skills_basic_inativos',
+                ]"
               />
 
-              <!-- <AppChartPie
-                class="col-span-full xl:col-span-4"
-                title="Alunos ChartPie"
+              <AppChartBar
+                class="col-span-full xl:col-span-6"
+                title="EB Skills Completo"
+                description="R$ 1900,00"
+                :data="(renovacao as any)"
                 index="semana"
-                description="R$ 3050,00"
-              /> -->
+                :categories="[
+                  'eb_skills_completo_ativos',
+                  'eb_skills_completo_inativos',
+                ]"
+              />
+
+              <AppChartBar
+                class="col-span-full xl:col-span-6"
+                title="EB Skills Tira Dúvidas"
+                description="R$ 1900,00"
+                :data="(renovacao as any)"
+                index="semana"
+                :categories="[
+                  'eb_skills_tira_duvidas_ativos',
+                  'eb_skills_tira_duvidas_inativos',
+                ]"
+              />
+
+              <AppChartBar
+                class="col-span-full xl:col-span-6"
+                title="EB Skills Cursos"
+                description="R$ 1900,00"
+                :data="(renovacao as any)"
+                index="semana"
+                :categories="[
+                  'eb_skills_cursos_ativos',
+                  'eb_skills_cursos_inativos',
+                ]"
+              />
+
+              <AppChartLine
+                class="col-span-full xl:col-span-8"
+                title="Evolução: Ativos vs Inativos"
+                description="R$ 1900,00"
+                :data="(renovacao as any)"
+                index="semana"
+                :categories="['total_ativos', 'total_inativos']"
+              />
+
+              <AppChartPie
+                class="col-span-full xl:col-span-4"
+                title="Porcentagem de Ativos"
+                :data="(renovacao as any)"
+                index="semana"
+                category="porcentagem_ativos"
+              />
             </UPageGrid>
           </template>
-          <template #gestao-contratos-mba>
-            <div>Conteúdo da aba Gestão de Contratos</div>
-          </template>
+
           <template #carteira-mba>
-            <div>Conteúdo da aba Carteira MBA</div>
+            <UPageGrid :ui="{ base: 'grid grid-cols-12' }" class="mt-4">
+              <AppChartBar
+                class="col-span-full xl:col-span-4"
+                title="Master: Ativo vs Inativo"
+                description="R$ 1900,00"
+                :data="(renovacao as any)"
+                index="semana"
+                :categories="['master_ativo', 'master_inativo']"
+              />
+
+              <AppChartBar
+                class="col-span-full xl:col-span-4"
+                title="Pleno: Ativo vs Inativo"
+                description="R$ 1900,00"
+                :data="(renovacao as any)"
+                index="semana"
+                :categories="['pleno_ativo', 'pleno_inativos']"
+              />
+
+              <AppChartBar
+                class="col-span-full xl:col-span-4"
+                title="Senior: Ativo vs Inativo"
+                description="R$ 1900,00"
+                :data="(renovacao as any)"
+                index="semana"
+                :categories="['senior_ativo', 'senior_inativo']"
+              />
+
+              <AppChartLine
+                class="col-span-full xl:col-span-6"
+                title="Evolução dos Ativos"
+                description="R$ 1900,00"
+                :data="(renovacao as any)"
+                index="semana"
+                :categories="['master_ativo', 'pleno_ativo', 'senior_ativo']"
+              />
+
+              <AppChartLine
+                class="col-span-full xl:col-span-6"
+                title="Evolução dos Inativos"
+                description="R$ 1900,00"
+                :data="(renovacao as any)"
+                index="semana"
+                :categories="[
+                  'master_inativo',
+                  'pleno_inativos',
+                  'senior_inativo',
+                ]"
+              />
+
+              <AppChartBar
+                class="col-span-full xl:col-span-6"
+                title="EB Skills Completo"
+                description="R$ 1900,00"
+                :data="(renovacao as any)"
+                index="semana"
+                :categories="[
+                  'eb_skills_basic_ativos',
+                  'eb_skills_basic_inativos',
+                ]"
+              />
+
+              <AppChartBar
+                class="col-span-full xl:col-span-6"
+                title="EB Skills Completo"
+                description="R$ 1900,00"
+                :data="(renovacao as any)"
+                index="semana"
+                :categories="[
+                  'eb_skills_completo_ativos',
+                  'eb_skills_completo_inativos',
+                ]"
+              />
+
+              <AppChartBar
+                class="col-span-full xl:col-span-6"
+                title="EB Skills Tira Dúvidas"
+                description="R$ 1900,00"
+                :data="(renovacao as any)"
+                index="semana"
+                :categories="[
+                  'eb_skills_tira_duvidas_ativos',
+                  'eb_skills_tira_duvidas_inativos',
+                ]"
+              />
+
+              <AppChartBar
+                class="col-span-full xl:col-span-6"
+                title="EB Skills Cursos"
+                description="R$ 1900,00"
+                :data="(renovacao as any)"
+                index="semana"
+                :categories="[
+                  'eb_skills_cursos_ativos',
+                  'eb_skills_cursos_inativos',
+                ]"
+              />
+
+              <AppChartLine
+                class="col-span-full xl:col-span-8"
+                title="Evolução: Ativos vs Inativos"
+                description="R$ 1900,00"
+                :data="(renovacao as any)"
+                index="semana"
+                :categories="['total_ativos', 'total_inativos']"
+              />
+
+              <AppChartPie
+                class="col-span-full xl:col-span-4"
+                title="Porcentagem de Ativos"
+                :data="(renovacao as any)"
+                index="semana"
+                category="porcentagem_ativos"
+              />
+            </UPageGrid>
           </template>
         </UTabs>
       </div>
