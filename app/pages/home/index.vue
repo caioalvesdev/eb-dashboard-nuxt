@@ -250,12 +250,17 @@ const {
 //     transform: (data: any) => data.data || [],
 //   }
 // );
+
 const active = ref<string>("renovacao");
+
 // watch(active, async (newVal) => {
-//   if (!newVal) return;
-//   console.log({ newVal });
-//   await refresh();
+//   if (newVal === "renovacao") {
+//     await refreshRenovacao();
+//   } else if (newVal === "base-alunos-info") {
+//     await refreshBaseAlunosInfo();
+//   }
 // });
+
 const pending = computed(
   () => pendingRenovacao.value || pendingBaseAlunosInfo.value
 );
@@ -384,7 +389,7 @@ function handleRefreshData() {
           description="Carregue seus arquivos Excel ou CSV para criar gráficos interativos"
         />
 
-        <UTabs :items="data" class="w-full" v-model="active">
+        <UTabs unmount-on-hide data-allow-mismatch :items="data" class="w-full" v-model="active">
           <template #renovacao>
             <UPageGrid :ui="{ base: 'grid grid-cols-12' }" class="mt-4">
               <AppChartBar
