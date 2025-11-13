@@ -12,7 +12,7 @@ const props = withDefaults(
   }>(),
   {
     title: "Gráfico de Pizza",
-    description: "Este é um gráfico de pizza de exemplo.",
+    description: "----",
     data: () => [],
     category: "semana" as any,
   }
@@ -93,14 +93,25 @@ const formattedTotal = computed(() => {
     >
       <template v-if="props.title || props.description" #header>
         <p class="text-xs text-muted uppercase mb-1.5">{{ props.title }}</p>
-        <p class="text-3xl text-highlighted font-semibold">
+        <p v-if="total > 0" class="text-3xl text-highlighted font-semibold">
           {{ formattedTotal || props.description }}
         </p>
+        <p class="text-3xl text-highlighted font-semibold" v-else>----</p>
       </template>
 
       <div class="relative w-full h-[400px]">
         <Pie :data="pieData" :options="pieChart.options.value" />
       </div>
+      <!-- <div
+        v-else
+        class="relative w-full h-[400px] flex items-center justify-center"
+      >
+        <UEmpty
+          variant="naked"
+          icon="i-lucide-pie-chart"
+          title="Nenhum dado disponível"
+        />
+      </div> -->
     </UCard>
   </ClientOnly>
 </template>

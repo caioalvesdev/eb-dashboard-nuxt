@@ -12,7 +12,7 @@ const props = withDefaults(
   }>(),
   {
     title: "Gráfico de Pizza",
-    description: "Este é um gráfico de pizza de exemplo.",
+    description: "----",
     data: () => [],
     categories: () => ["semana"],
   }

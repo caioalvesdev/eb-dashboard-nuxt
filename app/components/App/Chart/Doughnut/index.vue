@@ -12,7 +12,7 @@ const props = withDefaults(
   }>(),
   {
     title: "Gráfico de Doughnut",
-    description: "Este é um gráfico de doughnut de exemplo.",
+    description: "----",
     data: () => [],
     category: "semana" as any,
   }
@@ -94,9 +94,10 @@ const formattedTotal = computed(() => {
     >
       <template v-if="props.title || props.description" #header>
         <p class="text-xs text-muted uppercase mb-1.5">{{ props.title }}</p>
-        <p class="text-3xl text-highlighted font-semibold">
+        <p v-if="total > 0" class="text-3xl text-highlighted font-semibold">
           {{ formattedTotal || props.description }}
         </p>
+        <p class="text-3xl text-highlighted font-semibold" v-else>----</p>
       </template>
 
       <div class="relative w-full h-[400px]">

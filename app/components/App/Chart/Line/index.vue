@@ -12,7 +12,7 @@ const props = withDefaults(
   }>(),
   {
     title: "Gráfico de Pizza",
-    description: "Este é um gráfico de pizza de exemplo.",
+    description: "----",
     data: () => [],
     categories: () => ["semana"],
   }
@@ -96,8 +96,6 @@ const lineData = computed<ChartData<"line">>(() => ({
       :ui="{ root: 'overflow-visible', body: 'px-0! py-2!' }"
     >
       <template v-if="props.title || props.description" #header>
-        <!-- {{ chartData }} -->
-        <!-- {{ props.data }} -->
         <p class="text-xs text-muted uppercase mb-1.5">{{ props.title }}</p>
         <p class="text-3xl text-highlighted font-semibold">
           {{ props.description }}
