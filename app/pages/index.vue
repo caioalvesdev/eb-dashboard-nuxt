@@ -262,6 +262,35 @@ const {
   { default: () => [], transform: (data: any) => data.data || [] }
 );
 
+const {
+  data: gestaoContratosMba,
+  refresh: refreshGestaoContratosMba,
+  pending: pendingGestaoContratosMba,
+} = await useAsyncData(
+  "gestao-contratos-mba",
+  async () => {
+    try {
+      const data = await $fetch("/api/dashboard/gestao-contratos-mba", {
+        method: "GET",
+        query: { month: 11, year: 2025 },
+        default: () => [],
+      });
+
+      return data;
+    } catch (error) {
+      console.error("Erro ao buscar dados de gestão de contratos MBA:", error);
+      toast.add({
+        title: "Erro",
+        description:
+          "Ocorreu um erro ao buscar os dados de gestão de contratos MBA.",
+        icon: "i-lucide-x-circle",
+        color: "error",
+      });
+    }
+  },
+  { default: () => [], transform: (data: any) => data.data || [] }
+);
+
 // const { data: renovacao, refresh } = await useFetch(
 //   "/api/dashboard/renovacao",
 //   {
@@ -292,11 +321,16 @@ const active = ref<string>("renovacao");
 // });
 
 const pending = computed(
-  () => pendingRenovacao.value || pendingBaseAlunosInfo.value
+  () =>
+    pendingRenovacao.value ||
+    pendingBaseAlunosInfo.value ||
+    pendingGestaoContratosMba.value ||
+    pendingCarteiraMba.value
 );
 function handleRefreshData() {
   refreshRenovacao();
   refreshBaseAlunosInfo();
+  refreshGestaoContratosMba();
   refreshCarteiraMba();
   toast.add({
     title: "Atualizado",
@@ -631,19 +665,139 @@ function handleRefreshData() {
           <template #gestao-contratos-mba>
             <UPageGrid :ui="{ base: 'grid grid-cols-12' }" class="mt-4">
               <AppChartBar
-                class="col-span-full xl:col-span-6"
-                title="Contratos Ativos vs Inativos"
+                class="col-span-full xl:col-span-4"
+                title="RH: Assinados vs Pendentes"
+                :data="(gestaoContratosMba as any)"
+                index="semana"
+                :categories="['rh_assinados', 'rh_pendente']"
+              />
+
+              <AppChartBar
+                class="col-span-full xl:col-span-4"
+                title="NR1: Assinados vs Pendentes"
+                :data="(gestaoContratosMba as any)"
+                index="semana"
+                :categories="['nr1_assinados', 'nr1_pendente']"
+              />
+
+              <AppChartBar
+                class="col-span-full xl:col-span-4"
+                title="DP: Assinados vs Pendentes"
+                :data="(gestaoContratosMba as any)"
+                index="semana"
+                :categories="['dp_assinados', 'dp_pendente']"
+              />
+
+              <AppChartLine
+                class="col-span-full xl:col-span-8"
+                title="Evolução de Contratos Assinados por Departamento"
+                :data="(gestaoContratosMba as any)"
+                index="semana"
+                :categories="['rh_assinados', 'nr1_assinados', 'dp_assinados']"
+              />
+
+              <AppChartDoughnut
+                class="col-span-full xl:col-span-4"
+                title="Porcentagem Total de Assinados"
                 :data="(carteiraMba as any)"
                 index="semana"
-                :categories="['contratos_ativos', 'contratos_inativos']"
+                category="total_percentual"
+              />
+
+              <AppChartBar
+                class="col-span-full xl:col-span-6"
+                title="Total: Assinados vs Pendentes"
+                :data="(gestaoContratosMba as any)"
+                index="semana"
+                :categories="['total_assinados', 'total_pendentes']"
               />
 
               <AppChartLine
                 class="col-span-full xl:col-span-6"
-                title="Evolução dos Contratos"
-                :data="(carteiraMba as any)"
+                title="Evolução de Contratos Pendentes"
+                :data="(gestaoContratosMba as any)"
                 index="semana"
-                :categories="['contratos_ativos', 'contratos_inativos']"
+                :categories="['rh_pendente', 'nr1_pendente', 'dp_pendente']"
+              />
+
+              <AppChartDoughnut
+                class="col-span-full xl:col-span-4"
+                title="Eficiência RH (%)"
+                :data="(gestaoContratosMba as any)"
+                index="semana"
+                category="rh_percentual"
+              />
+
+              <AppChartDoughnut
+                class="col-span-full xl:col-span-4"
+                title="Eficiência NR1 (%)"
+                :data="(gestaoContratosMba as any)"
+                index="semana"
+                category="nr1_percentual"
+              />
+
+              <AppChartDoughnut
+                class="col-span-full xl:col-span-4"
+                title="Eficiência DP (%)"
+                :data="(gestaoContratosMba as any)"
+                index="semana"
+                category="dp_percentual"
+              />
+
+              <AppChartLine
+                class="col-span-full xl:col-span-12"
+                title="Comparativo de Eficiência por Departamento"
+                :data="(gestaoContratosMba as any)"
+                index="semana"
+                :categories="[
+                  'rh_percentual',
+                  'nr1_percentual',
+                  'dp_percentual',
+                ]"
+              />
+
+              <AppChartPie
+                class="col-span-full xl:col-span-4"
+                title="Volume RH por Semana"
+                :data="(gestaoContratosMba as any)"
+                index="semana"
+                category="rh_assinados"
+              />
+
+              <AppChartPie
+                class="col-span-full xl:col-span-4"
+                title="Volume NR1 por Semana"
+                :data="(gestaoContratosMba as any)"
+                index="semana"
+                category="nr1_assinados"
+              />
+
+              <AppChartPie
+                class="col-span-full xl:col-span-4"
+                title="Volume DP por Semana"
+                :data="(gestaoContratosMba as any)"
+                index="semana"
+                category="dp_assinados"
+              />
+
+              <AppChartArea
+                class="col-span-full xl:col-span-8"
+                title="Evolução de Volume de Contratos"
+                :data="(gestaoContratosMba as any)"
+                index="semana"
+                :categories="['rh_assinados', 'nr1_assinados', 'dp_assinados']"
+              />
+
+              <AppChartBar
+                class="col-span-full xl:col-span-4"
+                title="Performance por Departamento"
+                :data="(gestaoContratosMba as any)"
+                index="semana"
+                :categories="[
+                  'rh_percentual',
+                  'nr1_percentual',
+                  'dp_percentual',
+                ]"
               />
             </UPageGrid>
           </template>
