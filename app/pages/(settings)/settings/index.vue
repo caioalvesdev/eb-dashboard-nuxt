@@ -1,13 +1,8 @@
-<script setup lang="ts">
+<script lang="ts">
 import * as z from "zod";
-import type { FormSubmitEvent } from "@nuxt/ui";
-import imageCompression from "browser-image-compression";
+import type { Schema } from "~/types";
 
-const fileRef = ref<HTMLInputElement>();
-const file = ref<File | null>(null);
-const loading = ref<boolean>(false);
-
-const profileSchema = z.object({
+const validationSchema = z.object({
   name: z.string().min(2, "Muito curto"),
   email: z.string().email("E-mail inválido"),
   username: z.string().min(2, "Muito curto"),
@@ -15,21 +10,27 @@ const profileSchema = z.object({
   bio: z.string().optional(),
 });
 
-type ProfileSchema = z.output<typeof profileSchema>;
+type SchemaType = Schema<typeof validationSchema>;
+</script>
 
-const { user, uploadProfilePicture, updateProfile } = useUser();
-const { getSession } = useAuth();
-const profile = reactive<Partial<ProfileSchema>>({
-  name: user.value?.profile?.full_name ?? "",
-  email: user.value?.profile?.email ?? "",
-  username: user.value?.profile?.username ?? "",
-  avatar: user.value?.profile?.avatar_url ?? "",
-  bio: user.value?.profile?.bio ?? "",
+<script setup lang="ts">
+import type { FormSubmitEvent } from "@nuxt/ui";
+import imageCompression from "browser-image-compression";
+
+const { data: userProfile } = await useFetch("/api/user/profile", {
+  default: () => ({}),
 });
 
 const toast = useToast();
+const fileRef = ref<HTMLInputElement>();
+const file = ref<File | null>(null);
+const loading = ref<boolean>(false);
 
-async function onSubmit(event: FormSubmitEvent<ProfileSchema>) {
+const { uploadProfilePicture, updateProfile } = useUser();
+const { getSession } = useAuth();
+const formState = reactive<Partial<SchemaType>>(userProfile.value);
+
+async function onSubmit(event: FormSubmitEvent<SchemaType>) {
   try {
     loading.value = true;
     const { data: value } = event;
@@ -82,7 +83,7 @@ async function onFileChange(e: Event): Promise<void> {
 
   if (input.files[0]) {
     file.value = input.files[0];
-    profile.avatar = URL.createObjectURL(input.files[0]!);
+    formState.avatar = URL.createObjectURL(input.files[0]!);
   }
 }
 
@@ -99,8 +100,8 @@ definePageMeta({
   <UForm
     class="lg:max-w-2xl mx-auto w-full"
     id="settings"
-    :schema="profileSchema"
-    :state="profile"
+    :schema="validationSchema"
+    :state="formState"
     @submit="onSubmit"
   >
     <UPageCard
@@ -129,7 +130,11 @@ definePageMeta({
         required
         class="flex max-sm:flex-col justify-between items-start gap-4"
       >
-        <UInput :disabled="loading" v-model="profile.name" autocomplete="off" />
+        <UInput
+          :disabled="loading"
+          v-model="formState.name"
+          autocomplete="off"
+        />
       </UFormField>
       <USeparator />
       <UFormField
@@ -140,10 +145,11 @@ definePageMeta({
         class="flex max-sm:flex-col justify-between items-start gap-4"
       >
         <UInput
-          disabled
-          v-model="profile.email"
+          v-model="formState.email"
           type="email"
-          autocomplete="off"
+          autocomplete="email"
+          disabled
+          placeholder="Digite seu email"
         />
       </UFormField>
       <USeparator />
@@ -156,7 +162,7 @@ definePageMeta({
       >
         <UInput
           :disabled="loading"
-          v-model="profile.username"
+          v-model="formState.username"
           type="username"
           autocomplete="off"
         />
@@ -170,7 +176,7 @@ definePageMeta({
       >
         <div class="flex flex-wrap items-center gap-5">
           <UPopover arrow mode="hover" :open-delay="500" :close-delay="300">
-            <UAvatar :src="profile.avatar" :alt="profile.name" size="xl" />
+            <UAvatar :src="formState.avatar" :alt="formState.name" size="xl" />
 
             <template #content>
               <UPageCard spotlight>
@@ -178,8 +184,8 @@ definePageMeta({
                   class="rounded-lg"
                   width="300"
                   height="300"
-                  :src="profile.avatar"
-                  :alt="profile.name"
+                  :src="formState.avatar"
+                  :alt="formState.name"
                 />
               </UPageCard>
             </template>
@@ -208,7 +214,7 @@ definePageMeta({
         :ui="{ container: 'w-full' }"
       >
         <UTextarea
-          v-model="profile.bio"
+          v-model="formState.bio"
           :disabled="loading"
           :rows="5"
           autoresize

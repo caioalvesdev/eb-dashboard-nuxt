@@ -5,7 +5,7 @@ import * as z from "zod";
 const { data: authUsers, refresh: refreshUsers } = await useAsyncData(
   "authUsers",
   async () => {
-    const { data } = await useFetch("/api/users/list", {
+    const { data } = await useFetch("/api/user/list", {
       default: () => ({ users: [], total: 0 }),
     });
     return data.value;
@@ -17,7 +17,6 @@ const isInviteModalOpen = ref(false);
 const inviteEmail = ref("");
 const loading = ref<boolean>(false);
 
-// Processa os usuários com seus profiles
 const allMembers = computed(() => {
   if (!authUsers.value?.users) return [];
 

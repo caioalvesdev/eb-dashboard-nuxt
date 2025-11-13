@@ -24,6 +24,7 @@ export function useUser() {
       if (!user.value || !user.value.id)
         throw new Error("No user is logged in.");
 
+      await supabase.auth.updateUser({ email: profile.email ?? undefined });
       return await supabase
         .from("profiles")
         .upsert({ ...profile, id: user.value.id })

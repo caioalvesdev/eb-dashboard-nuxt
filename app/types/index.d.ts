@@ -58,3 +58,11 @@ export interface Range {
   start: Date;
   end: Date;
 }
+
+export type Profile = {
+  name: string;
+  email: string;
+  username: string;
+  avatar: string;
+  bio: string;
+};
