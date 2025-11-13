@@ -1,6 +1,11 @@
 <template>
-  <div class="xl:grid xl:grid-cols-2">
-    <UPageCard :ui="{ root: 'rounded-none' }" variant="naked" spotlight>
+  <div class="lg:grid lg:grid-cols-2">
+    <UPageCard
+      class="hidden lg:flex"
+      :ui="{ root: 'rounded-none' }"
+      variant="naked"
+      spotlight
+    >
       <UPageSection
         orientation="vertical"
         :ui="{

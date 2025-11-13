@@ -76,13 +76,22 @@ definePageMeta({
 </script>
 <template>
   <UContainer class="flex flex-col items-center justify-center gap-4 p-4 h-dvh">
+    <!-- <Motion
+      as-child
+      :initial="{ opacity: 0, transform: 'translateX(-10px)' }"
+      :while-in-view="{ opacity: 1, transform: 'translateX(0)' }"
+      :transition="{ delay: 0.2 + 0.4 * 1 }"
+      :in-view-options="{ once: true }"
+    >
+      <div class="text-3xl text-left">RealmTech Solutions</div>
+    </Motion> -->
     <UPageCard class="w-full max-w-md">
       <UAuthForm
         :loading
         :disabled="loading"
         :schema="schema"
         :submit="{ label: 'Entrar' }"
-        title="Login"
+        title="Signin"
         description="Insira suas credenciais para acessar sua conta."
         icon="i-lucide-user"
         :fields="fields"

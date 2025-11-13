@@ -17,7 +17,9 @@ type SchemaType = Schema<typeof validationSchema>;
 import type { FormSubmitEvent } from "@nuxt/ui";
 import imageCompression from "browser-image-compression";
 
-const { data: userProfile } = await useFetch("/api/user/profile", {
+const { data: profileData } = await useFetch("/api/profile", {
+  key: "user-profile",
+  method: "GET",
   default: () => ({}),
 });
 
@@ -28,7 +30,7 @@ const loading = ref<boolean>(false);
 
 const { uploadProfilePicture, updateProfile } = useUser();
 const { getSession } = useAuth();
-const formState = reactive<Partial<SchemaType>>(userProfile.value);
+const formState = reactive<Partial<SchemaType>>(profileData.value);
 
 async function onSubmit(event: FormSubmitEvent<SchemaType>) {
   try {

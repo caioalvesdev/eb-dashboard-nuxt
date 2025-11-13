@@ -1,9 +1,7 @@
 <script setup lang="ts">
+import type { DropdownMenuItem, FormSubmitEvent, TabsItem } from "@nuxt/ui";
 import { sub } from "date-fns";
-import type { DropdownMenuItem, TabsItem } from "@nuxt/ui";
 import * as z from "zod";
-import type { FormSubmitEvent } from "@nuxt/ui";
-import { ca } from "zod/v4/locales";
 
 definePageMeta({
   layout: "dashboard-default",
@@ -74,7 +72,7 @@ const formatBytes = (bytes: number, decimals = 2) => {
   );
 };
 
-const schema = z.object({
+const validationSchema = z.object({
   file: z
     .instanceof(File, {
       message: "Por favor, selecione um arquivo.",
@@ -113,9 +111,9 @@ const schema = z.object({
     }),
 });
 
-type schema = z.output<typeof schema>;
+type validationSchema = z.output<typeof validationSchema>;
 
-const state = reactive<Partial<schema>>({
+const formState = reactive<Partial<validationSchema>>({
   file: undefined,
 });
 
@@ -144,7 +142,7 @@ async function handleDownloadTemplate() {
 
 const value = ref<number>(0);
 
-async function onSubmit(event: FormSubmitEvent<schema>) {
+async function onSubmit(event: FormSubmitEvent<validationSchema>) {
   try {
     isLoadingUpload.value = true;
     value.value = 0;
@@ -164,7 +162,7 @@ async function onSubmit(event: FormSubmitEvent<schema>) {
       icon: "i-lucide-check",
     });
     isOpenUploadModal.value = false;
-    state.file = undefined;
+    formState.file = undefined;
   } catch (error) {
     console.error(error);
     toast.add({
@@ -182,143 +180,51 @@ const {
   data: renovacao,
   refresh: refreshRenovacao,
   pending: pendingRenovacao,
-} = await useAsyncData(
-  "renovacao",
-  async () => {
-    try {
-      const data = await $fetch("/api/dashboard/renovacao", {
-        method: "GET",
-        query: { month: 11, year: 2025 },
-        default: () => [],
-      });
-
-      return data;
-    } catch (error) {
-      console.error("Erro ao buscar dados de renovação:", error);
-      toast.add({
-        title: "Erro",
-        description: "Ocorreu um erro ao buscar os dados de renovação.",
-        icon: "i-lucide-x-circle",
-        color: "error",
-      });
-    }
-  },
-  { default: () => [], transform: (data: any) => data.data || [] }
-);
+} = await useFetch("/api/dashboard/renovacao", {
+  key: "renovacao",
+  query: { month: 11, year: 2025 },
+  method: "GET",
+  default: () => [],
+  transform: (data: any) => data.data || [],
+});
 
 const {
   data: baseAlunosInfo,
   refresh: refreshBaseAlunosInfo,
   pending: pendingBaseAlunosInfo,
-} = await useAsyncData(
-  "base-alunos-info",
-  async () => {
-    try {
-      const data = await $fetch("/api/dashboard/base-alunos-info", {
-        method: "GET",
-        query: { month: 11, year: 2025 },
-        default: () => [],
-      });
-
-      return data;
-    } catch (error) {
-      console.error("Erro ao buscar dados de renovação:", error);
-      toast.add({
-        title: "Erro",
-        description: "Ocorreu um erro ao buscar os dados de renovação.",
-        icon: "i-lucide-x-circle",
-        color: "error",
-      });
-    }
-  },
-  { default: () => [], transform: (data: any) => data.data || [] }
-);
+} = await useFetch("/api/dashboard/base-alunos-info", {
+  key: "base-alunos-info",
+  query: { month: 11, year: 2025 },
+  method: "GET",
+  default: () => [],
+  transform: (data: any) => data.data || [],
+});
 
 const {
   data: carteiraMba,
   refresh: refreshCarteiraMba,
   pending: pendingCarteiraMba,
-} = await useAsyncData(
-  "carteira-mba",
-  async () => {
-    try {
-      const data = await $fetch("/api/dashboard/carteira-mba", {
-        method: "GET",
-        query: { month: 11, year: 2025 },
-        default: () => [],
-      });
-
-      return data;
-    } catch (error) {
-      console.error("Erro ao buscar dados de carteira MBA:", error);
-      toast.add({
-        title: "Erro",
-        description: "Ocorreu um erro ao buscar os dados de carteira MBA.",
-        icon: "i-lucide-x-circle",
-        color: "error",
-      });
-    }
-  },
-  { default: () => [], transform: (data: any) => data.data || [] }
-);
+} = await useFetch("/api/dashboard/carteira-mba", {
+  key: "carteira-mba",
+  query: { month: 11, year: 2025 },
+  method: "GET",
+  default: () => [],
+  transform: (data: any) => data.data || [],
+});
 
 const {
   data: gestaoContratosMba,
   refresh: refreshGestaoContratosMba,
   pending: pendingGestaoContratosMba,
-} = await useAsyncData(
-  "gestao-contratos-mba",
-  async () => {
-    try {
-      const data = await $fetch("/api/dashboard/gestao-contratos-mba", {
-        method: "GET",
-        query: { month: 11, year: 2025 },
-        default: () => [],
-      });
-
-      return data;
-    } catch (error) {
-      console.error("Erro ao buscar dados de gestão de contratos MBA:", error);
-      toast.add({
-        title: "Erro",
-        description:
-          "Ocorreu um erro ao buscar os dados de gestão de contratos MBA.",
-        icon: "i-lucide-x-circle",
-        color: "error",
-      });
-    }
-  },
-  { default: () => [], transform: (data: any) => data.data || [] }
-);
-
-// const { data: renovacao, refresh } = await useFetch(
-//   "/api/dashboard/renovacao",
-//   {
-//     query: { month: 11, year: 2025 },
-//     method: "GET",
-//     default: () => [],
-//     transform: (data: any) => data.data || [],
-//   }
-// );
-// const { data: baseAlunosInfo } = await useFetch(
-//   "/api/dashboard/base-alunos-info",
-//   {
-//     query: { month: 11, year: 2025 },
-//     method: "GET",
-//     default: () => [],
-//     transform: (data: any) => data.data || [],
-//   }
-// );
+} = await useFetch("/api/dashboard/gestao-contratos-mba", {
+  key: "gestao-contratos-mba",
+  query: { month: 11, year: 2025 },
+  method: "GET",
+  default: () => [],
+  transform: (data: any) => data.data || [],
+});
 
 const active = ref<string>("renovacao");
-
-// watch(active, async (newVal) => {
-//   if (newVal === "renovacao") {
-//     await refreshRenovacao();
-//   } else if (newVal === "base-alunos-info") {
-//     await refreshBaseAlunosInfo();
-//   }
-// });
 
 const pending = computed(
   () =>
@@ -327,11 +233,13 @@ const pending = computed(
     pendingGestaoContratosMba.value ||
     pendingCarteiraMba.value
 );
-function handleRefreshData() {
-  refreshRenovacao();
-  refreshBaseAlunosInfo();
-  refreshGestaoContratosMba();
-  refreshCarteiraMba();
+async function handleRefreshData() {
+  await Promise.all([
+    refreshRenovacao(),
+    refreshBaseAlunosInfo(),
+    refreshGestaoContratosMba(),
+    refreshCarteiraMba(),
+  ]);
   toast.add({
     title: "Atualizado",
     description: "Os dados foram atualizados com sucesso.",
@@ -414,8 +322,8 @@ function handleRefreshData() {
               />
               <UForm
                 :disabled="isLoadingUpload"
-                :schema="schema"
-                :state="state"
+                :schema="validationSchema"
+                :state="formState"
                 class="space-y-4"
                 @submit="onSubmit"
               >
@@ -423,7 +331,7 @@ function handleRefreshData() {
                   <UFileUpload
                     :disabled="isLoadingUpload"
                     :file-delete="!isLoadingUpload"
-                    v-model="state.file"
+                    v-model="formState.file"
                     label="Selecione ou arraste um arquivo"
                     description="CSV, XLS, XLSX (max. 10MB)"
                     accept=".csv,.xls,.xlsx"
