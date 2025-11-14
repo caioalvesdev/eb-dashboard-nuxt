@@ -122,7 +122,21 @@ const downloadTemplateLoading = ref<boolean>(false);
 async function handleDownloadTemplate() {
   try {
     downloadTemplateLoading.value = true;
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    const templateUrl = "/templates/template.xlsx";
+
+    const currentDate = new Date();
+    const monthName = currentDate.toLocaleDateString("pt-BR", {
+      month: "long",
+    });
+    const year = currentDate.getFullYear();
+
+    const link = document.createElement("a");
+    link.href = templateUrl;
+    link.download = `template_${monthName}_${year}.xlsx`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
     toast.add({
       title: "Sucesso",
       description: "Template baixado com sucesso!",
@@ -153,9 +167,15 @@ async function onSubmit(event: FormSubmitEvent<validationSchema>) {
     await new Promise((resolve) => setTimeout(resolve, 500));
     value.value = 3;
     await new Promise((resolve) => setTimeout(resolve, 500));
+
     value.value = 4;
-    console.log(event.data);
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    const formData = new FormData();
+    formData.append("file", event.data.file);
+    await $fetch("/api/dashboard/upload", {
+      method: "POST",
+      body: formData,
+    });
+
     toast.add({
       title: "Sucesso",
       description: "Arquivo carregado com sucesso!",
@@ -163,6 +183,7 @@ async function onSubmit(event: FormSubmitEvent<validationSchema>) {
     });
     isOpenUploadModal.value = false;
     formState.file = undefined;
+    await stackFetches();
   } catch (error) {
     console.error(error);
     toast.add({
@@ -233,13 +254,17 @@ const pending = computed(
     pendingGestaoContratosMba.value ||
     pendingCarteiraMba.value
 );
-async function handleRefreshData() {
+
+async function stackFetches() {
   await Promise.all([
     refreshRenovacao(),
     refreshBaseAlunosInfo(),
     refreshGestaoContratosMba(),
     refreshCarteiraMba(),
   ]);
+}
+async function handleRefreshData() {
+  await stackFetches();
   toast.add({
     title: "Atualizado",
     description: "Os dados foram atualizados com sucesso.",
