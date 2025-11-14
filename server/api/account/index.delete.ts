@@ -1,4 +1,4 @@
-export default defineEventHandler(async (event) => {
+export default defineAuthenticatedEventHandler(async (event) => {
   // const client = await serverSupabaseServiceRole(event);
   // const user = await serverSupabaseUser(event);
 

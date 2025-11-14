@@ -5,7 +5,7 @@ interface ExcelRow {
   [key: string]: string | number | boolean | Date;
 }
 
-export default defineEventHandler(async (event) => {
+export default defineAuthenticatedEventHandler(async (event) => {
   try {
     const body = await readFormData(event);
     const file = body.get("file") as File;

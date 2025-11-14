@@ -1,6 +1,5 @@
 import { serverSupabaseServiceRole } from "#supabase/server";
 import * as z from "zod";
-import sendZodError from "../utils/send-zod-error";
 
 const Schema = z.object({
   email: z.email(),
@@ -8,7 +7,7 @@ const Schema = z.object({
   redirectTo: z.url().optional(),
 });
 
-export default defineEventHandler(async (event) => {
+export default defineAuthenticatedEventHandler(async (event) => {
   try {
     const config = useRuntimeConfig();
     const input = await readValidatedBody(event, Schema.safeParse);

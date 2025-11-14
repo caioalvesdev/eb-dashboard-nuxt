@@ -13,7 +13,7 @@ function throwError(event: EventType, error: ErrorType): void {
   return sendError(event, createError(error));
 }
 
-export default defineEventHandler(async (event) => {
+export default defineAuthenticatedEventHandler(async (event) => {
   const input = await getValidatedQuery(event, validationSchema.safeParse);
 
   if (!input.success) {

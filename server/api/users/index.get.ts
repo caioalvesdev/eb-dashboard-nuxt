@@ -1,6 +1,6 @@
 import { serverSupabaseServiceRole } from "#supabase/server";
 
-export default defineEventHandler(async (event) => {
+export default defineAuthenticatedEventHandler(async (event) => {
   try {
     const supabase = serverSupabaseServiceRole(event);
     const query = getQuery(event);
