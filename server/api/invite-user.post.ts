@@ -1,4 +1,4 @@
-import { createClient } from "@supabase/supabase-js";
+import { serverSupabaseServiceRole } from "#supabase/server";
 
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig();
@@ -12,18 +12,8 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    const supabaseAdmin = createClient(
-      config.public.supabaseUrl,
-      config.supabaseServiceKey,
-      {
-        auth: {
-          autoRefreshToken: false,
-          persistSession: false,
-        },
-      }
-    );
+    const supabaseAdmin = serverSupabaseServiceRole(event);
 
-    // Convida o usuário usando a API admin
     const { data, error } = await supabaseAdmin.auth.admin.inviteUserByEmail(
       body.email,
       {
