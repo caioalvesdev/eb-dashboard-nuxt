@@ -4,16 +4,7 @@ import { serverSupabaseClient } from "#supabase/server";
 interface ExcelRow {
   [key: string]: string | number | boolean | Date;
 }
-interface ExcelWorkbook {
-  sheets: {
-    [sheetName: string]: ExcelRow[];
-  };
-  sheetNames: string[];
-}
-interface WeekInfo {
-  number: number;
-  range?: string;
-}
+
 export default defineEventHandler(async (event) => {
   try {
     const body = await readFormData(event);
@@ -85,7 +76,6 @@ export default defineEventHandler(async (event) => {
       if (sheetName === "Base de Alunos Info") {
         const newData = rows.map((row) => {
           const normalizeData = normalized(row);
-          console.log({ normalizeData });
           return {
             semana: normalizeData?.["semana"] ?? 0,
             senior_ativo: normalizeData?.["sênior ativo"] ?? 0,

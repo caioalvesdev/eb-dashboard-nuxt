@@ -5,7 +5,7 @@ import * as z from "zod";
 const { data: authUsers, refresh: refreshUsers } = await useAsyncData(
   "authUsers",
   async () => {
-    const { data } = await useFetch("/api/user/list", {
+    const { data } = await useFetch("/api/users", {
       default: () => ({ users: [], total: 0 }),
     });
     return data.value;
@@ -73,7 +73,7 @@ async function handleSubmit(event: FormSubmitEvent<ProfileSchema>) {
     loading.value = true;
     const { email } = event.data;
     // Chama a API do servidor (que tem acesso ao service key)
-    await $fetch("/api/invite-user", {
+    await $fetch("/api/users/invite", {
       method: "POST",
       body: {
         email: email,

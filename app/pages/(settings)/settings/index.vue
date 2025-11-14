@@ -62,7 +62,6 @@ async function onSubmit(event: FormSubmitEvent<SchemaType>) {
       title: "Sucesso",
       description: "Suas configurações foram atualizadas.",
       icon: "i-lucide-check",
-      color: "success",
     });
   } catch (error) {
     toast.add({

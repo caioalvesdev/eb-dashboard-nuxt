@@ -23,10 +23,13 @@ export default defineEventHandler(async (event) => {
   const client = await serverSupabaseClient(event);
 
   const { month, year } = input.data;
-  const { data, error } = await client.rpc("soma_gestao_contratos_mba_por_semana", {
-    filter_month: month,
-    filter_year: year,
-  });
+  const { data, error } = await client.rpc(
+    "soma_gestao_contratos_mba_por_semana",
+    {
+      filter_month: month,
+      filter_year: year,
+    }
+  );
 
   if (error) {
     return throwError(event, { statusCode: 500, message: error.message });

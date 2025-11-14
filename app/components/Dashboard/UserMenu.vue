@@ -154,7 +154,6 @@ const items = computed<DropdownMenuItem[][]>(() => [
             checked: appConfig.theme.radius === r,
             onSelect: (e) => {
               e.preventDefault();
-              console.log({ r });
               appConfig.theme.radius = r;
               preferences.value.theme.radius = r;
             },
